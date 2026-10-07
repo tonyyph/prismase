@@ -1,10 +1,10 @@
-import { Ionicons } from '@expo/vector-icons';
-import { memo, useEffect } from 'react';
+import { useEffect } from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import Animated, {
   Easing,
   FadeIn,
   FadeInDown,
+  ZoomIn,
   cancelAnimation,
   useAnimatedStyle,
   useSharedValue,
@@ -12,67 +12,49 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { PrismItem } from '../components/game/PrismItem';
+import { WesternIcon } from '../components/art/WesternIcon';
 import { AppButton } from '../components/ui/AppButton';
 import { AppText } from '../components/ui/AppText';
-import { CoinIcon } from '../components/ui/CoinIcon';
+import { menuSunY } from '../components/ui/Backdrop';
 import { CoinPill } from '../components/ui/CoinPill';
 import { IconButton } from '../components/ui/IconButton';
 import { LogoMark } from '../components/ui/LogoMark';
 import { ScalePressable } from '../components/ui/Pressable';
 import { Screen } from '../components/ui/Screen';
-import { Wordmark } from '../components/ui/Wordmark';
+import { WoodTile } from '../components/ui/WoodTile';
+import { Ribbon, Wordmark } from '../components/ui/Wordmark';
 import { REWARDS } from '../game/economy';
 import { getLevelConfig } from '../game/levelConfig';
 import { canClaimDaily } from '../game/progress';
 import { useReducedMotion } from '../hooks/usePersistedSettings';
 import { usePrismaseGame } from '../hooks/usePrismaseGame';
 import { useGameStore } from '../store/gameStore';
-import { colors, radius, spacing } from '../theme';
+import { colors, spacing } from '../theme';
 
-const FLOATERS = [
-  { colorId: 'cyan', x: 0.12, y: 0.16, size: 34, period: 5200 },
-  { colorId: 'pink', x: 0.82, y: 0.12, size: 28, period: 6100 },
-  { colorId: 'violet', x: 0.86, y: 0.5, size: 40, period: 5600 },
-  { colorId: 'amber', x: 0.08, y: 0.58, size: 26, period: 6600 },
-  { colorId: 'emerald', x: 0.7, y: 0.3, size: 22, period: 5900 },
-];
-
-const Floater = ({ colorId, x, y, size, period }: (typeof FLOATERS)[number]) => {
-  const { width, height } = useWindowDimensions();
+/** The outlaw hangs just under the noon sun and sways a little, like a sign in hot wind. */
+const HeroMark = ({ size }: { size: number }) => {
   const reducedMotion = useReducedMotion();
   const t = useSharedValue(0);
   useEffect(() => {
     if (reducedMotion) return undefined;
     t.set(
-      withRepeat(withTiming(1, { duration: period, easing: Easing.inOut(Easing.sin) }), -1, true),
+      withRepeat(withTiming(1, { duration: 3400, easing: Easing.inOut(Easing.sin) }), -1, true),
     );
     return () => cancelAnimation(t);
-  }, [t, period, reducedMotion]);
+  }, [t, reducedMotion]);
   const style = useAnimatedStyle(() => ({
-    transform: [{ translateY: (t.value - 0.5) * 18 }, { rotate: `${(t.value - 0.5) * 16}deg` }],
+    transform: [{ rotate: `${(t.value - 0.5) * 6}deg` }],
   }));
   return (
-    <Animated.View
-      style={[styles.floater, { left: x * width, top: y * height, opacity: 0.55 }, style]}
-    >
-      <PrismItem colorId={colorId} size={size} />
+    <Animated.View entering={ZoomIn.springify().damping(12)} style={style}>
+      <LogoMark size={size} />
     </Animated.View>
   );
 };
 
-const Floaters = memo(function Floaters() {
-  return (
-    <View style={StyleSheet.absoluteFill} pointerEvents="none">
-      {FLOATERS.map((f) => (
-        <Floater key={f.colorId} {...f} />
-      ))}
-    </View>
-  );
-});
-
 export const MainMenuScreen = () => {
   const game = usePrismaseGame();
+  const { width: W, height: H } = useWindowDimensions();
   const progress = useGameStore((s) => s.progress);
   const claimDailyReward = useGameStore((s) => s.claimDailyReward);
   const dailyAvailable = useGameStore((s) => canClaimDaily(s.progress, Date.now()));
@@ -80,79 +62,90 @@ export const MainMenuScreen = () => {
   const current = progress.currentLevel;
   const newest = progress.unlockedLevel;
   const difficulty = getLevelConfig(current).difficulty;
+  const markSize = Math.min(W * 0.52, H * 0.26);
+  const markTop = menuSunY(H) + H * 0.03;
 
   return (
-    <Screen>
-      <Floaters />
-      <View style={styles.topRow}>
-        {dailyAvailable ? (
-          <ScalePressable
-            onPress={claimDailyReward}
-            style={styles.daily}
-            accessibilityRole="button"
-            accessibilityLabel={`Claim daily reward, ${REWARDS.daily} coins`}
-          >
-            <Ionicons name="gift-outline" size={18} color={colors.amber} />
-            <AppText variant="label">Daily</AppText>
-            <CoinIcon size={14} />
-            <AppText variant="label" color={colors.amber}>
-              +{REWARDS.daily}
-            </AppText>
-          </ScalePressable>
-        ) : (
-          <View />
-        )}
-        <CoinPill />
+    <View style={styles.root}>
+      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+        <View style={[styles.mark, { top: markTop, left: W / 2 - markSize / 2 }]}>
+          <HeroMark size={markSize} />
+        </View>
+        <Animated.View
+          entering={FadeIn.duration(600).delay(200)}
+          style={[styles.title, { top: markTop + markSize * 0.92 }]}
+        >
+          <Wordmark width={Math.min(W - 40, 340)} />
+          <Ribbon label="SORT THE SPECTRUM" width={Math.min(W - 80, 260)} />
+        </Animated.View>
       </View>
 
-      <Animated.View entering={FadeIn.duration(500)} style={styles.hero}>
-        <LogoMark size={104} />
-        <Wordmark width={260} />
-        <AppText color={colors.textSecondary} variant="label" style={styles.tagline}>
-          Sort the spectrum.
-        </AppText>
-      </Animated.View>
-
-      <Animated.View entering={FadeInDown.duration(500).delay(150)} style={styles.actions}>
-        <AppText variant="caption" color={colors.textSecondary} align="center">
-          LEVEL {current} · {difficulty.toUpperCase()}
-        </AppText>
-        <AppButton
-          variant="primary"
-          icon="play"
-          label={hasPlayed ? `Continue · Level ${current}` : 'Play'}
-          onPress={game.continueGame}
-        />
-        {hasPlayed && newest !== current ? (
-          <AppButton
-            icon="flash-outline"
-            label={`Play Level ${newest}`}
-            onPress={() => game.startLevel(newest)}
-          />
-        ) : null}
-        <AppButton
-          icon="grid-outline"
-          label="Level Select"
-          onPress={() => game.navigate('levelSelect')}
-        />
-        <View style={styles.iconRow}>
-          <IconButton
-            icon="help-circle-outline"
-            label="How to play"
-            onPress={() => game.navigate('howToPlay')}
-          />
-          <IconButton
-            icon="settings-outline"
-            label="Settings"
-            onPress={() => game.navigate('settings')}
-          />
+      <Screen>
+        <View style={styles.topRow}>
+          {dailyAvailable ? (
+            <ScalePressable
+              onPress={claimDailyReward}
+              style={styles.daily}
+              accessibilityRole="button"
+              accessibilityLabel={`Open the daily chest, ${REWARDS.daily} doubloons`}
+            >
+              <WoodTile style={styles.dailyTile}>
+                <WesternIcon name="chest" size={22} />
+                <AppText variant="label">DAILY</AppText>
+                <AppText variant="treasure" color={colors.brassLight} style={styles.dailyAmount}>
+                  +{REWARDS.daily}
+                </AppText>
+              </WoodTile>
+            </ScalePressable>
+          ) : (
+            <View />
+          )}
+          <CoinPill />
         </View>
-      </Animated.View>
-    </Screen>
+
+        <View style={styles.spacer} />
+
+        <Animated.View entering={FadeInDown.duration(500).delay(250)} style={styles.actions}>
+          <View style={styles.levelTag}>
+            <AppText variant="caption" color={colors.textSecondary}>
+              LEVEL {current} · {difficulty.toUpperCase()}
+            </AppText>
+          </View>
+          <AppButton
+            variant="primary"
+            label={hasPlayed ? `Continue · Level ${current}` : 'Ride Out'}
+            onPress={game.continueGame}
+          />
+          {hasPlayed && newest !== current ? (
+            <AppButton
+              icon="arrow"
+              label={`Play Level ${newest}`}
+              onPress={() => game.startLevel(newest)}
+            />
+          ) : null}
+          <AppButton icon="map" label="Level Select" onPress={() => game.navigate('levelSelect')} />
+          <View style={styles.iconRow}>
+            <IconButton
+              icon="help"
+              label="How to play"
+              onPress={() => game.navigate('howToPlay')}
+            />
+            <IconButton
+              icon="settings"
+              label="Settings"
+              onPress={() => game.navigate('settings')}
+            />
+          </View>
+        </Animated.View>
+      </Screen>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  root: { flex: 1 },
+  mark: { position: 'absolute' },
+  title: { position: 'absolute', left: 0, right: 0, alignItems: 'center', gap: 0 },
   topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -160,23 +153,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingTop: spacing.sm,
   },
-  daily: {
+  daily: { height: 44 },
+  dailyTile: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    height: 40,
     paddingHorizontal: spacing.md,
-    borderRadius: radius.pill,
-    backgroundColor: 'rgba(251,191,36,0.12)',
-    borderWidth: StyleSheet.hairlineWidth * 2,
-    borderColor: 'rgba(251,191,36,0.35)',
   },
-  hero: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.sm },
-  tagline: { letterSpacing: 1.5 },
+  dailyAmount: { fontSize: 22, lineHeight: 29 },
+  spacer: { flex: 1 },
+  levelTag: {
+    alignSelf: 'center',
+    paddingHorizontal: spacing.md,
+    paddingVertical: 3,
+    borderRadius: 4,
+    backgroundColor: colors.woodDark,
+    borderWidth: 1,
+    borderColor: '#2b170c',
+  },
   actions: {
     gap: spacing.md,
     paddingHorizontal: spacing.xl,
-    paddingBottom: spacing.xl,
+    paddingBottom: spacing.lg,
     width: '100%',
     maxWidth: 460,
     alignSelf: 'center',
@@ -187,5 +185,4 @@ const styles = StyleSheet.create({
     gap: spacing.lg,
     marginTop: spacing.xs,
   },
-  floater: { position: 'absolute' },
 });

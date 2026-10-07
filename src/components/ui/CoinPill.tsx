@@ -9,7 +9,7 @@ import Animated, {
 
 import { useReducedMotion } from '../../hooks/usePersistedSettings';
 import { useGameStore } from '../../store/gameStore';
-import { colors, radius, spacing } from '../../theme';
+import { radius, spacing } from '../../theme';
 import { AppText } from './AppText';
 import { CoinIcon } from './CoinIcon';
 
@@ -31,9 +31,10 @@ export const CoinPill = () => {
     <Animated.View
       style={[styles.pill, animated]}
       accessible
-      accessibilityLabel={`${coins} prism coins`}
+      accessibilityLabel={`${coins} doubloons`}
     >
-      <CoinIcon size={18} />
+      <View pointerEvents="none" style={styles.stitch} />
+      <CoinIcon size={22} />
       <View>
         <AppText variant="number">{coins}</AppText>
       </View>
@@ -45,12 +46,21 @@ const styles = StyleSheet.create({
   pill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: spacing.xs + 2,
+    gap: spacing.sm,
     paddingHorizontal: spacing.md,
-    height: 40,
-    borderRadius: radius.pill,
-    backgroundColor: colors.surfaceGlass,
-    borderWidth: StyleSheet.hairlineWidth * 2,
-    borderColor: 'rgba(251,191,36,0.35)',
+    minWidth: 92,
+    height: 42,
+    borderRadius: radius.sm + 2,
+    backgroundColor: '#7a4428',
+    borderWidth: 1.5,
+    borderColor: '#3e1f10',
+  },
+  stitch: {
+    ...StyleSheet.absoluteFill,
+    margin: 4,
+    borderRadius: radius.sm,
+    borderWidth: 1.2,
+    borderStyle: 'dashed',
+    borderColor: '#e0b77a',
   },
 });

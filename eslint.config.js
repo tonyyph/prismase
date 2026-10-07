@@ -12,6 +12,12 @@ module.exports = defineConfig([
   {
     rules: {
       'no-console': ['error', { allow: ['warn', 'error'] }],
+    },
+  },
+  {
+    // The TypeScript plugin is only registered for TS files by eslint-config-expo.
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },

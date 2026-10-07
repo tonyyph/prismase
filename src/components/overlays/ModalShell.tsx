@@ -12,10 +12,20 @@ type Props = {
   /** Delay before the panel appears, e.g. to let the winning move land first. */
   delay?: number;
   behind?: ReactNode;
+  /** Drawn above the panel, e.g. the rope-hung sign on Pause. */
+  header?: ReactNode;
+  material?: 'wood' | 'parchment';
 };
 
 /** Scrim plus a centred glass panel that fades and scales in. */
-export const ModalShell = ({ children, onDismiss, delay = 0, behind }: Props) => {
+export const ModalShell = ({
+  children,
+  onDismiss,
+  delay = 0,
+  behind,
+  header,
+  material = 'wood',
+}: Props) => {
   const reducedMotion = useReducedMotion();
   return (
     <Animated.View
@@ -42,7 +52,8 @@ export const ModalShell = ({ children, onDismiss, delay = 0, behind }: Props) =>
           }
           style={styles.panelWrap}
         >
-          <GlassPanel>{children}</GlassPanel>
+          {header}
+          <GlassPanel material={material}>{children}</GlassPanel>
         </Animated.View>
       </View>
     </Animated.View>

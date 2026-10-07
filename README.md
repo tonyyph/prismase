@@ -1,8 +1,8 @@
 # Prismase
 
-**Sort the spectrum.** Prismase is a premium casual colour-sort puzzle for iOS and Android. Tap a
-glass prism to lift its top crystal, tap another to place it, and fill every prism with four of
-a kind. Offline, no account, levels generated on demand, monetised with player-initiated
+**Sort the spectrum.** Prismase is a premium casual colour-sort puzzle for iOS and Android, dressed
+as a high-noon frontier with a pinch of pirate. Tap a crate to lift its top concho, tap another
+to place it, and fill every crate with four of a kind. Offline, no account, levels generated on demand, monetised with player-initiated
 rewarded ads and lightly paced interstitials.
 
 ## Tech stack
@@ -45,7 +45,7 @@ pnpm android          # native debug build (needs Android Studio / SDK)
 ## Checks
 
 ```bash
-pnpm test             # 110+ unit and integration tests
+pnpm test             # 120+ unit and integration tests
 pnpm typecheck        # tsc --noEmit
 pnpm lint             # expo lint (ESLint + Prettier)
 pnpm verify           # all three
@@ -81,6 +81,28 @@ tools/            generate-assets.js (icons/splash), generate-sounds.js (WAVs)
 Rules of the codebase: **game logic never imports React**, **ads never touch game state
 directly** (the store asks the ad service, then applies the reward), **components never touch
 storage** (the store persists), and **colours/spacing/type come from `src/theme`**.
+
+## Design: Dust & Doubloons
+
+A high-noon frontier with a pinch of pirate. The rule for every asset: **real frontier
+materials only** (weathered wood, saddle leather, wanted-poster paper, brass, forged iron),
+no glow and no electronics. The approved asset sheet is `docs/design/asset-review.html`.
+
+| Element                                         | Treatment                                                                                                                                                                                                                                                 |
+| ----------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| World (`ui/Backdrop.tsx`, `art/desertScene.ts`) | Menu: open desert at noon, white-hot sun and rays, mesas, a pirate ship run aground in the dunes, saguaros, a tumbleweed. Everywhere else: the saloon's plank floor (`ui/Planks.tsx`).                                                                    |
+| Pieces (`game/PrismItem.tsx`, `art/Emblem.tsx`) | Scalloped brass conchos with enamel faces and a carved emblem. 9 cowboy emblems (star, horseshoe, hat, cactus, boot, longhorn, spade, wagon wheel, revolver cylinder) and 3 pirate ones (anchor, skull and bones, compass). Colour is never the only cue. |
+| Crates (`art/CrateArt.tsx`)                     | Upright pine crates with an open front, iron bands, brass corner brackets. Selected: gold outline. Complete: brass band and a sheriff medallion in the crate's colour. Extra crate: lashed with rope.                                                     |
+| Surfaces (`ui/GlassPanel.tsx`)                  | Wood boards with brass tacks, or torn double-ruled parchment (win poster). Pause is a board hung on ropes.                                                                                                                                                |
+| Buttons (`ui/AppButton.tsx`)                    | Primary: brick-red painted plank in wood type. Secondary: pine plank in letterpress caps. Ads are marked with a red rubber "AD" stamp.                                                                                                                    |
+| Icons (`art/WesternIcon.tsx`)                   | Hand-drawn set: lasso (undo), storm lantern (hint), revolver cylinder (restart), spur (settings), map, treasure chest, signpost (back), bugle (sound)…                                                                                                    |
+| Currency (`art/Doubloon.tsx`)                   | Doubloons: hand-struck gold coins with a star.                                                                                                                                                                                                            |
+| Mark (`brand/outlawMark.js`)                    | Approved option A: a cowboy skull with revolvers crossed under the jaw. One SVG drives both the in-app logo (SvgXml) and the icon PNGs (resvg).                                                                                                           |
+| Type (`theme/typography.ts`)                    | Rye (wood type) for titles, Pirata One only for treasure moments, Bitter for UI (it has lining figures; Zilla Slab was dropped because its old-style zero reads as "o").                                                                                  |
+| Sound (`tools/generate-sounds.js`)              | Knuckle on wood, coin on a table, slack banjo string, spur jingle, whistled showdown over an open guitar chord, coins into a chest.                                                                                                                       |
+
+`art/__tests__/pieces.test.ts` enforces unique emblems and enamels, at most one pirate piece
+in three, and at least 3:1 contrast between each emblem and its enamel.
 
 ## How the game works
 
@@ -143,7 +165,7 @@ pnpm assets           # assets/icon.png, android-icon-*, splash-icon.png, favico
 pnpm sounds           # assets/sounds/*.wav
 ```
 
-The mark is the same six-facet crystal as `LogoMark.tsx`. Opaque icons are written as RGB
+The icon is rendered with resvg from `src/brand/outlawMark.js`, the same SVG the app draws. Opaque icons are written as RGB
 without alpha (App Store requirement).
 
 ## Dev deep links (debug builds only)

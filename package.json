@@ -14,7 +14,14 @@
     "format": "prettier --write .",
     "verify": "pnpm typecheck && pnpm lint && pnpm test",
     "assets": "node tools/generate-assets.js",
-    "sounds": "node tools/generate-sounds.js"
+    "sounds": "node tools/generate-sounds.js",
+    "eas:whoami": "sh tools/eas.sh whoami",
+    "eas:builds": "sh tools/eas.sh build:list --limit 10",
+    "eas:credentials": "sh tools/eas.sh credentials",
+    "build:ios": "sh tools/eas.sh build --platform ios --profile production --non-interactive --wait",
+    "submit:ios": "sh tools/eas.sh submit --platform ios --profile production --latest --non-interactive --wait",
+    "release:ios": "pnpm verify && pnpm build:ios && pnpm submit:ios",
+    "asc:app-id": "node tools/asc-app-id.js"
   },
   "jest": {
     "preset": "jest-expo",
@@ -26,8 +33,9 @@
     ]
   },
   "dependencies": {
-    "@expo-google-fonts/manrope": "^0.4.2",
-    "@expo-google-fonts/sora": "^0.4.2",
+    "@expo-google-fonts/bitter": "^0.4.2",
+    "@expo-google-fonts/pirata-one": "^0.4.1",
+    "@expo-google-fonts/rye": "^0.4.1",
     "@expo/vector-icons": "^15.1.1",
     "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "~57.0.27",
@@ -49,6 +57,7 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.20.5",
     "@types/react": "~19.2.18",

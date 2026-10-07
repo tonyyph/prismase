@@ -1,0 +1,722 @@
+<title>Prismase Dust &amp; Doubloons</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rye&family=Pirata+One&family=Zilla+Slab:wght@500;600;700&display=swap">
+<style>
+  /* Layout: one ledger column on dark saddle leather; every asset sits on its real in-game surface. */
+  :root {
+    --bg: #1c130d;
+    --panel: #2a1c13;
+    --line: #4a3322;
+    --fg: #f3e6cc;
+    --muted: #c2a888;
+    --gold: #e0a92a;
+    --red: #b8432b;
+    --display: 'Rye', 'Georgia', serif;
+    --body: 'Zilla Slab', 'Rockwell', 'Georgia', serif;
+    --pirate: 'Pirata One', 'Georgia', serif;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font: 500 17px/1.55 var(--body); }
+  .wrap { max-width: 1140px; margin: 0 auto; padding-inline: 20px; padding-block: 36px 96px; }
+  header { display: grid; gap: 14px; max-width: 760px; }
+  .eyebrow { font: 700 13px/1 var(--body); letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+  h1 { font: 400 clamp(34px, 6vw, 58px)/1.15 var(--display); margin: 0; text-wrap: balance; }
+  h1 em { font-family: var(--pirate); font-style: normal; color: var(--gold); font-size: 1.12em; }
+  h2 { font: 400 clamp(24px, 3.4vw, 32px)/1.25 var(--display); margin: 0; text-wrap: balance; }
+  h3 { font: 700 15px/1.3 var(--body); margin: 0; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); }
+  p { margin: 0; max-width: 68ch; }
+  .muted { color: var(--muted); }
+  section { border-top: 1px solid var(--line); padding-block: 44px; display: grid; gap: 22px; }
+  .sec-head { display: grid; gap: 8px; }
+  .tag { display: inline-block; font: 700 12px/1 var(--body); letter-spacing: 0.12em; padding: 5px 8px; border: 1px solid var(--gold); color: var(--gold); border-radius: 4px; margin-right: 8px; vertical-align: 3px; }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .grid.wide { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; display: grid; gap: 8px; justify-items: center; text-align: center; min-width: 0; }
+  .card svg { width: 100%; height: auto; display: block; }
+  .card .name { font-weight: 700; }
+  .card .sub { font-size: 14px; color: var(--muted); line-height: 1.35; }
+  .strip { background: #3b2416; border: 1px solid var(--line); border-radius: 10px; padding: 14px; overflow-x: auto; }
+  .strip svg { display: block; height: auto; max-width: none; }
+  .gray svg { filter: grayscale(1) contrast(1.05); }
+  .phones { display: flex; flex-wrap: wrap; gap: 28px; justify-content: center; }
+  .phone { width: min(100%, 330px); display: grid; gap: 10px; justify-items: center; }
+  .phone .frame { width: 100%; border-radius: 38px; overflow: hidden; border: 9px solid #0e0906; box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55); background: #0e0906; }
+  .phone svg { display: block; width: 100%; height: auto; }
+  .phone .cap { font-size: 15px; color: var(--muted); text-align: center; }
+  .icons { display: flex; flex-wrap: wrap; gap: 28px; justify-content: center; }
+  .iconopt { display: grid; gap: 12px; justify-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; width: min(100%, 360px); }
+  .iconopt .sizes { display: flex; gap: 14px; align-items: end; }
+  .iconopt .big { width: 180px; }
+  .iconopt .sm60 { width: 60px; }
+  .iconopt .sm40 { width: 40px; }
+  .iconopt .letter { font: 400 30px/1 var(--display); color: var(--gold); }
+  .palette { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); }
+  .sw { border-radius: 8px; overflow: hidden; border: 1px solid var(--line); background: var(--panel); }
+  .sw i { display: block; height: 58px; }
+  .sw span { display: block; padding: 8px 10px; font-size: 13px; line-height: 1.3; }
+  .sw b { display: block; font-size: 14px; }
+  .type { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .type div { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 6px; min-width: 0; }
+  .sample-rye { font: 400 34px/1.3 var(--display); }
+  .sample-pirata { font: 400 40px/1.15 var(--pirate); color: var(--gold); }
+  .sample-zilla { font: 700 22px/1.35 var(--body); }
+  table { border-collapse: collapse; width: 100%; min-width: 560px; }
+  .tablewrap { overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+  tr:last-child td { border-bottom: 0; }
+  .decide { display: grid; gap: 12px; }
+  .decide div { background: var(--panel); border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: 8px; padding: 14px 16px; display: grid; gap: 4px; }
+  .decide b { font-size: 16px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Prismase · Asset review v1 · chờ duyệt</div>
+    <h1>Dust &amp; <em>Doubloons</em></h1>
+    <p>Miền Tây giữa trưa, thuần cowboy: gỗ phong sương, da yên ngựa, giấy truy nã, đồng thau và sắt rèn. Hải tặc chỉ xuất hiện như gia vị: tiền là đồng <i>doubloon</i>, quà hằng ngày là rương báu, ngoài sa mạc có một con thuyền buồm mắc cạn, và 3 trong 12 quân cờ mang biểu tượng biển. Không neon, không phát sáng điện tử.</p>
+    <p class="muted">Tất cả asset dưới đây đều vẽ bằng SVG thuần (không dùng filter), nên bản bạn duyệt sẽ chuyển thẳng sang react-native-svg, không phải vẽ lại. Chữ trong game vẫn để tiếng Anh như v1.</p>
+  </header>
+
+  <section>
+    <div class="sec-head"><h2>1 · Icon ứng dụng</h2><p class="muted">Hai phương án, mỗi phương án xem ở cỡ App Store và cỡ màn hình chính.</p></div>
+    <div class="icons" id="icons"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>2 · 12 quân cờ</h2><p class="muted">Đồng concho viền răng cưa bằng đồng thau, mặt men màu, khắc một biểu tượng. Mỗi màu có biểu tượng riêng, nên người mù màu vẫn phân biệt được. Biểu tượng hải tặc gồm mỏ neo, đầu lâu xương chéo và la bàn.</p></div>
+    <div class="grid" id="pieces"></div>
+    <h3>Ở cỡ thật trên bàn chơi (khoảng 34px)</h3>
+    <div class="strip" id="pieceStrip"></div>
+    <h3>Cùng hàng đó khi bỏ màu (kiểm tra mù màu)</h3>
+    <div class="strip gray" id="pieceStripGray"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>3 · Thùng chứa</h2><p class="muted">Thay cho ống thủy tinh: một thùng gỗ đứng, mặt trước mở, đai sắt tán đinh, ke góc bằng đồng.</p></div>
+    <div class="grid wide" id="crates"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>4 · Màn hình</h2><p class="muted">Menu là sa mạc lúc giữa trưa. Khi chơi, bàn chơi nằm trên mặt quầy saloon. Màn thắng là một tờ truy nã. Màn tạm dừng là tấm biển gỗ treo dây thừng.</p></div>
+    <div class="phones" id="phones"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>5 · Bộ giao diện</h2><p class="muted">Nút chính là tấm ván sơn đỏ đóng đinh đồng. Nút phụ là tấm ván mộc. Icon hành động vẽ riêng theo chủ đề, không dùng bộ icon có sẵn.</p></div>
+    <div class="strip" id="kit"></div>
+    <div class="grid" id="actionIcons"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>6 · Màu và chữ</h2></div>
+    <div class="palette" id="palette"></div>
+    <div class="type">
+      <div><h3>Tiêu đề · Rye</h3><span class="sample-rye">Bounty Collected</span><span class="muted">Chữ gỗ khắc kiểu poster truy nã. Dùng cho tiêu đề, nút chính và số level.</span></div>
+      <div><h3>Điểm nhấn hải tặc · Pirata One</h3><span class="sample-pirata">Treasure!</span><span class="muted">Chỉ dùng cho khoảnh khắc nhận thưởng, rương báu và doubloon.</span></div>
+      <div><h3>Giao diện · Zilla Slab</h3><span class="sample-zilla">Tap a crate to pick.</span><span class="muted">Chữ slab serif kiểu in tipô, dễ đọc ở cỡ nhỏ. Dùng cho nhãn, mô tả và số.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>7 · Âm thanh (mô tả để duyệt)</h2><p class="muted">Sẽ tổng hợp bằng script như trước nhưng đổi chất liệu: tiếng gỗ, kim loại, dây, huýt sáo. Không dùng tiếng chip 8-bit.</p></div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Sự kiện</th><th>Âm thanh</th></tr></thead>
+      <tbody>
+        <tr><td>Chọn thùng</td><td>Gõ đốt ngón tay lên gỗ, một tiếng "cộc" khô và ngắn</td></tr>
+        <tr><td>Di chuyển</td><td>Đồng xu trượt rồi đặt xuống mặt gỗ</td></tr>
+        <tr><td>Đi sai</td><td>Tiếng dây đàn banjo chùng, hai nốt đi xuống</td></tr>
+        <tr><td>Hoàn thành thùng</td><td>Tiếng leng keng của cựa giày</td></tr>
+        <tr><td>Thắng màn</td><td>Huýt sáo miền Tây kiểu phim cao bồi, kèm một nốt guitar mộc</td></tr>
+        <tr><td>Nhận doubloon</td><td>Tiếng đồng xu rơi vào rương</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Cần bạn quyết</h2><p class="muted">Trả lời trong chat, ví dụ "Icon A, đổi tiền thành Doubloons, giữ tên Prismase". Mình chỉ bắt tay triển khai sau khi bạn duyệt.</p></div>
+    <div class="decide">
+      <div><b>D1 · Icon: A (Đầu lâu đội mũ cao bồi) hay B (Doubloon sheriff)?</b><span class="muted">Phương án A gây chú ý hơn trên store. Phương án B thân thiện hơn với người chơi casual.</span></div>
+      <div><b>D2 · Bộ 12 quân cờ</b><span class="muted">Có muốn thay biểu tượng nào không, hoặc đổi tỉ lệ cowboy/hải tặc (hiện tại là 9/3)?</span></div>
+      <div><b>D3 · Tên tiền tệ: "Doubloons" hay giữ "Prism Coins"?</b><span class="muted">Mockup đang dùng Doubloons.</span></div>
+      <div><b>D4 · Gọi vật chứa là "crate" trong chữ hướng dẫn?</b><span class="muted">Ví dụ "Tap a crate to pick." thay cho "Tap a prism to pick."</span></div>
+      <div><b>D5 · Có giữ tên app "Prismase" không?</b><span class="muted">Tên gốc gợi lăng kính và ánh sáng, nay hơi lệch với chủ đề cowboy. Có thể giữ tên và đổi phụ đề, hoặc đặt tên mới.</span></div>
+    </div>
+  </section>
+</div>
+
+<script>
+  'use strict';
+  // ---------- helpers ----------
+  let U = 0;
+  const uid = (p) => `${p}${++U}`;
+  const rng = (seed) => { let s = seed >>> 0 || 1; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); };
+  const h2r = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const r2h = (a) => '#' + a.map((v) => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0')).join('');
+  const mixc = (a, b, t) => { const A = h2r(a), B = h2r(b); return r2h(A.map((v, i) => v + (B[i] - v) * t)); };
+  const lighten = (c, t) => mixc(c, '#ffffff', t);
+  const darken = (c, t) => mixc(c, '#000000', t);
+  const svg = (w, h, body, cls = '') => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" class="${cls}">${body}</svg>`;
+  const f1 = (n) => Math.round(n * 10) / 10;
+
+  const C = {
+    ink: '#2b1a10', cream: '#fbefd5', parchment: '#ead6a6', parchDark: '#c9a565',
+    wood: '#8c5a30', woodLight: '#b07a45', woodDark: '#5a321a', plankRed: '#b8432b',
+    brass: '#c9962e', brassLight: '#f3d27a', iron: '#3b3533', rope: '#c8a46a',
+    sky: '#7db9da', sand: '#e4bc7e', terracotta: '#b5653d', sage: '#5f7d3a',
+  };
+
+  const PIECES = [
+    { id: 'crimson', name: 'Crimson', color: '#b8322a', icon: 'star', label: 'Sao sheriff' },
+    { id: 'turquoise', name: 'Turquoise', color: '#2a9d8f', icon: 'horseshoe', label: 'Móng ngựa' },
+    { id: 'mustard', name: 'Mustard', color: '#d39a14', icon: 'hat', label: 'Mũ cao bồi' },
+    { id: 'sage', name: 'Sage', color: '#5b8a34', icon: 'cactus', label: 'Xương rồng' },
+    { id: 'denim', name: 'Denim', color: '#2f5d9e', icon: 'anchor', label: 'Mỏ neo', pirate: true },
+    { id: 'rust', name: 'Rust', color: '#cf6420', icon: 'boot', label: 'Ủng có cựa' },
+    { id: 'plum', name: 'Plum', color: '#6e3b6e', icon: 'jolly', label: 'Đầu lâu xương chéo', pirate: true },
+    { id: 'saddle', name: 'Saddle', color: '#7a4a2a', icon: 'longhorn', label: 'Sọ bò sừng dài' },
+    { id: 'coal', name: 'Coal', color: '#2e2b2c', icon: 'spade', label: 'Át bích' },
+    { id: 'bone', name: 'Bone', color: '#e3d3ae', icon: 'compass', label: 'La bàn', pirate: true, inkEmblem: true },
+    { id: 'rose', name: 'Rose', color: '#c4506a', icon: 'wheel', label: 'Bánh xe ngựa' },
+    { id: 'steel', name: 'Steel', color: '#66788a', icon: 'cylinder', label: 'Ổ quay súng' },
+  ];
+  const P = Object.fromEntries(PIECES.map((p) => [p.id, p]));
+
+  const starPts = (cx, cy, ro, ri, n = 5, rot = -90) =>
+    Array.from({ length: n * 2 }, (_, i) => {
+      const a = ((rot + (i * 180) / n) * Math.PI) / 180;
+      const r = i % 2 ? ri : ro;
+      return `${f1(cx + r * Math.cos(a))},${f1(cy + r * Math.sin(a))}`;
+    }).join(' ');
+
+  // ---------- emblems (100 box, centred on 50,50) ----------
+  function emblem(t, f, a) {
+    switch (t) {
+      case 'star': {
+        const tips = Array.from({ length: 5 }, (_, i) => { const ang = ((-90 + i * 72) * Math.PI) / 180; return [50 + 26 * Math.cos(ang), 52 + 26 * Math.sin(ang)]; });
+        return `<polygon points="${starPts(50, 52, 25, 11)}" fill="${f}"/>${tips.map(([x, y]) => `<circle cx="${f1(x)}" cy="${f1(y)}" r="3.8" fill="${f}"/>`).join('')}<circle cx="50" cy="52" r="4.5" fill="${a}"/>`;
+      }
+      case 'horseshoe':
+        return `<path d="M33 31 C22 50 28 76 50 76 C72 76 78 50 67 31 L57 31 C63 48 60 66 50 66 C40 66 37 48 43 31 Z" fill="${f}"/><rect x="29" y="26" width="16" height="7" rx="2" fill="${f}"/><rect x="55" y="26" width="16" height="7" rx="2" fill="${f}"/>` +
+          [[33, 44], [35, 58], [67, 44], [65, 58]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.9" fill="${a}"/>`).join('');
+      case 'hat':
+        return `<path d="M20 57 Q50 70 80 57 Q83 61 77 64 Q50 77 23 64 Q17 61 20 57 Z" fill="${f}"/><path d="M33 60 Q31 38 40 31 Q50 38 60 31 Q69 38 67 60 Q50 64 33 60 Z" fill="${f}"/><path d="M33 52 Q50 57 67 52 L67 57 Q50 61 33 57 Z" fill="${a}"/>`;
+      case 'cactus':
+        return `<path d="M50 77 V27 M50 59 H39 V45 M50 51 H61 V37" stroke="${f}" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M34 78 H66" stroke="${f}" stroke-width="3.5" stroke-linecap="round"/>`;
+      case 'anchor':
+        return `<circle cx="50" cy="27" r="5" stroke="${f}" stroke-width="4.5" fill="none"/><path d="M50 32 V74 M38 41 H62" stroke="${f}" stroke-width="5.5" stroke-linecap="round" fill="none"/><path d="M29 57 Q31 75 50 75 Q69 75 71 57" stroke="${f}" stroke-width="5.5" stroke-linecap="round" fill="none"/><path d="M23 61 L30 51 L36 61 Z M77 61 L70 51 L64 61 Z" fill="${f}"/>`;
+      case 'boot':
+        return `<path d="M39 25 H58 L58 55 Q59 61 65 62 L74 64 Q80 66 79 72 V75 H39 Z" fill="${f}"/><rect x="37" y="22" width="23" height="6" rx="2" fill="${f}"/><path d="M44 33 Q48.5 41 53 33 M44 44 Q48.5 52 53 44" stroke="${a}" stroke-width="2.2" fill="none"/><rect x="39" y="75" width="11" height="4" rx="1" fill="${f}"/><path d="M39 68 H31" stroke="${f}" stroke-width="2.5"/><polygon points="${starPts(28, 68, 6, 2.2, 6, 0)}" fill="${f}"/>`;
+      case 'jolly':
+        return `<path d="M28 76 L72 42 M28 42 L72 76" stroke="${f}" stroke-width="6.5" stroke-linecap="round"/>` +
+          [[24, 72], [31, 79], [69, 38], [76, 45], [24, 45], [31, 38], [69, 79], [76, 72]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="4.3" fill="${f}"/>`).join('') +
+          `<path d="M35 45 Q35 24 50 24 Q65 24 65 45 Q65 52 59 54 V61 H41 V54 Q35 52 35 45 Z" fill="${f}"/><circle cx="43.5" cy="43" r="5.2" fill="${a}"/><circle cx="56.5" cy="43" r="5.2" fill="${a}"/><path d="M50 48 L47 54 H53 Z" fill="${a}"/><path d="M45.5 57 V61 M50 57 V61 M54.5 57 V61" stroke="${a}" stroke-width="1.6"/>`;
+      case 'longhorn':
+        return `<path d="M44 40 C36 36 26 37 17 29 C19 40 30 47 44 48 Z" fill="${f}"/><path d="M56 40 C64 36 74 37 83 29 C81 40 70 47 56 48 Z" fill="${f}"/><path d="M40 37 H60 Q61 50 57 62 Q50 75 43 62 Q39 50 40 37 Z" fill="${f}"/><circle cx="45" cy="47" r="3.4" fill="${a}"/><circle cx="55" cy="47" r="3.4" fill="${a}"/><circle cx="47.5" cy="65" r="1.5" fill="${a}"/><circle cx="52.5" cy="65" r="1.5" fill="${a}"/>`;
+      case 'spade':
+        return `<path d="M50 24 C44 35 29 41 29 52 C29 61 38 65 46 59 L42 74 H58 L54 59 C62 65 71 61 71 52 C71 41 56 35 50 24 Z" fill="${f}"/>`;
+      case 'compass':
+        return `<circle cx="50" cy="50" r="25" stroke="${f}" stroke-width="2.5" fill="none"/><polygon points="${starPts(50, 50, 13, 3.5, 4, -45)}" fill="${f}" opacity="0.55"/><polygon points="${starPts(50, 50, 24, 5, 4, -90)}" fill="${f}"/><polygon points="50,26 54.5,45.5 50,50" fill="${a}" opacity="0.55"/><polygon points="74,50 54.5,54.5 50,50" fill="${a}" opacity="0.55"/><circle cx="50" cy="50" r="3" fill="${a}"/>`;
+      case 'wheel':
+        return `<circle cx="50" cy="50" r="23" stroke="${f}" stroke-width="6" fill="none"/>` +
+          Array.from({ length: 8 }, (_, i) => { const ang = (i * Math.PI) / 4; return `<path d="M${f1(50 + 6 * Math.cos(ang))} ${f1(50 + 6 * Math.sin(ang))} L${f1(50 + 21 * Math.cos(ang))} ${f1(50 + 21 * Math.sin(ang))}" stroke="${f}" stroke-width="3.6" stroke-linecap="round"/>`; }).join('') +
+          `<circle cx="50" cy="50" r="7" fill="${f}"/><circle cx="50" cy="50" r="2.4" fill="${a}"/>`;
+      case 'cylinder':
+        return `<circle cx="50" cy="50" r="25" fill="${f}"/>` +
+          Array.from({ length: 6 }, (_, i) => { const ang = ((-90 + i * 60) * Math.PI) / 180; return `<circle cx="${f1(50 + 13.5 * Math.cos(ang))}" cy="${f1(50 + 13.5 * Math.sin(ang))}" r="5.8" fill="${a}"/>`; }).join('') +
+          `<circle cx="50" cy="50" r="3.4" fill="${a}"/>`;
+    }
+    return '';
+  }
+
+  // Concho rim: rounded scallops with pinched valleys.
+  function scallop(cx, cy, r, amp, n) {
+    let d = '';
+    for (let i = 0; i <= 360; i += 2) {
+      const a = (i * Math.PI) / 180;
+      const rr = r - amp + amp * Math.abs(Math.cos((n * a) / 2));
+      d += `${i ? 'L' : 'M'}${f1(cx + rr * Math.cos(a))} ${f1(cy + rr * Math.sin(a))} `;
+    }
+    return d + 'Z';
+  }
+  const RIM = scallop(50, 50, 48, 3.2, 18);
+
+  /** One playing piece: brass concho, enamel face, carved emblem. */
+  function token(p, cx, cy, size) {
+    const rim = uid('rim'), en = uid('en');
+    const c = p.color;
+    const ink = p.inkEmblem;
+    const beads = Array.from({ length: 18 }, (_, i) => { const a = (i * Math.PI) / 9 + 0.17; return `<circle cx="${f1(50 + 42.3 * Math.cos(a))}" cy="${f1(50 + 42.3 * Math.sin(a))}" r="1.3" fill="#6b4214" opacity="0.65"/>`; }).join('');
+    const fg = ink ? C.ink : C.cream;
+    const body = `
+      <defs>
+        <linearGradient id="${rim}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7dd8c"/><stop offset="0.5" stop-color="#cc9a34"/><stop offset="1" stop-color="#7a4f14"/></linearGradient>
+        <radialGradient id="${en}" cx="0.38" cy="0.32" r="0.78"><stop offset="0" stop-color="${lighten(c, 0.32)}"/><stop offset="0.55" stop-color="${c}"/><stop offset="1" stop-color="${darken(c, 0.38)}"/></radialGradient>
+      </defs>
+      <path d="${RIM}" fill="url(#${rim})" stroke="#4a2a0e" stroke-width="1.6"/>
+      ${beads}
+      <circle cx="50" cy="50" r="38.6" fill="#5a3510"/>
+      <circle cx="50" cy="50" r="36.6" fill="url(#${en})" stroke="${darken(c, 0.55)}" stroke-width="1.2"/>
+      <g transform="translate(50 50) scale(0.8) translate(-50 -50)">
+        ${ink ? '' : `<g transform="translate(1.6 2.2)" opacity="0.4">${emblem(p.icon, '#000', '#000')}</g>`}
+        ${emblem(p.icon, fg, c)}
+      </g>
+      <path d="M22 42 A30 30 0 0 1 56 16" stroke="#ffffff" stroke-opacity="0.35" stroke-width="4" stroke-linecap="round" fill="none"/>`;
+    return `<g transform="translate(${f1(cx - size / 2)} ${f1(cy - size / 2)}) scale(${size / 100})">${body}</g>`;
+  }
+
+  // ---------- doubloon + small kit pieces ----------
+  function doubloon(cx, cy, r, seed = 3) {
+    const g = uid('gold');
+    const R = rng(seed);
+    let d = '';
+    for (let i = 0; i < 28; i += 1) { const a = (i / 28) * Math.PI * 2; const rr = r * (0.94 + R() * 0.08); d += `${i ? 'L' : 'M'}${f1(cx + rr * Math.cos(a))} ${f1(cy + rr * Math.sin(a))} `; }
+    return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0.4" y2="1"><stop offset="0" stop-color="#fff1b0"/><stop offset="0.45" stop-color="#e9b83c"/><stop offset="1" stop-color="#9a6416"/></linearGradient></defs>
+      <path d="${d}Z" fill="url(#${g})" stroke="#6b4210" stroke-width="${f1(r * 0.07)}" stroke-linejoin="round"/>
+      <circle cx="${cx}" cy="${cy}" r="${f1(r * 0.72)}" fill="none" stroke="#8a5a14" stroke-width="${f1(r * 0.05)}" stroke-dasharray="${f1(r * 0.08)} ${f1(r * 0.07)}"/>
+      <polygon points="${starPts(cx, cy + r * 0.04, r * 0.5, r * 0.22)}" fill="#8a5a14"/>
+      <polygon points="${starPts(cx - r * 0.03, cy, r * 0.5, r * 0.22)}" fill="#f6d77a"/>`;
+  }
+
+  function plankButton(x, y, w, h, label, { variant = 'primary', ad = false } = {}) {
+    const g = uid('pb');
+    const red = variant === 'primary';
+    const top = red ? '#c94a2f' : '#cfa268';
+    const bot = red ? '#8e2a19' : '#a3723d';
+    const edge = red ? '#5e1a0e' : '#6b4421';
+    const txt = red ? C.cream : C.ink;
+    const font = red ? `font-family="Rye" font-size="${f1(h * 0.38)}"` : `font-family="Zilla Slab" font-weight="700" font-size="${f1(h * 0.32)}" letter-spacing="1.5"`;
+    const R = rng(Math.round(x + y + w));
+    const grain = Array.from({ length: 3 }, (_, i) => { const yy = y + h * (0.28 + i * 0.22) + R() * 4; return `<path d="M${x + 12} ${f1(yy)} C${x + w * 0.3} ${f1(yy - 3)} ${x + w * 0.6} ${f1(yy + 3)} ${x + w - 12} ${f1(yy)}" stroke="#fff" stroke-opacity="0.09" stroke-width="1.2" fill="none"/>`; }).join('');
+    const nail = (nx) => `<circle cx="${nx}" cy="${y + h / 2}" r="${f1(h * 0.075)}" fill="${C.brassLight}" stroke="#6b4214" stroke-width="1"/><circle cx="${nx - 1}" cy="${y + h / 2 - 1}" r="${f1(h * 0.03)}" fill="#fff6d8"/>`;
+    return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${top}"/><stop offset="1" stop-color="${bot}"/></linearGradient></defs>
+      <rect x="${x}" y="${y + 4}" width="${w}" height="${h}" rx="8" fill="${edge}"/>
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="url(#${g})" stroke="${edge}" stroke-width="1.5"/>
+      ${grain}${nail(x + 14)}${nail(x + w - 14)}
+      ${red ? `<text x="${x + w / 2 + 1.5}" y="${f1(y + h * 0.64 + 2)}" text-anchor="middle" ${font} fill="#4a1208" opacity="0.6">${label}</text>` : ''}
+      <text x="${x + w / 2 - (ad ? 20 : 0)}" y="${f1(y + h * 0.64)}" text-anchor="middle" ${font} fill="${txt}">${label}</text>${ad ? adStamp(x + w - 64, y + h / 2 + 2) : ''}`;
+  }
+
+  function adStamp(x, y) {
+    return `<g transform="translate(${x} ${y}) rotate(-4)"><rect x="0" y="-11" width="30" height="18" rx="2" fill="none" stroke="#9e2b1a" stroke-width="1.8" stroke-dasharray="3 1.5"/><text x="15" y="3" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="11" fill="#9e2b1a" letter-spacing="1">AD</text></g>`;
+  }
+
+  function coinPill(x, y, value) {
+    return `<rect x="${x}" y="${y}" width="96" height="38" rx="8" fill="#7a4428" stroke="#3e1f10" stroke-width="1.5"/>
+      <rect x="${x + 4}" y="${y + 4}" width="88" height="30" rx="6" fill="none" stroke="#e0b77a" stroke-width="1.2" stroke-dasharray="4 3"/>
+      <g>${doubloon(x + 22, y + 19, 12, 7)}</g>
+      <text x="${x + 64}" y="${y + 26}" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="19" fill="${C.cream}">${value}</text>`;
+  }
+
+  function woodTile(x, y, w, h) {
+    const g = uid('wt');
+    return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a6435"/><stop offset="1" stop-color="#6e4223"/></linearGradient></defs>
+      <rect x="${x}" y="${y + 3}" width="${w}" height="${h}" rx="9" fill="#2e180b"/>
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="9" fill="url(#${g})" stroke="#3a1f0e" stroke-width="1.5"/>
+      <path d="M${x + 8} ${y + h * 0.35} H${x + w - 8} M${x + 8} ${y + h * 0.68} H${x + w - 8}" stroke="#2e180b" stroke-opacity="0.35" stroke-width="1"/>`;
+  }
+
+  // ---------- action icons (24 box, ink strokes) ----------
+  const ICON = {
+    undo: (c) => `<path d="M19 18 C20 10 14 6.5 7 9" stroke="${c}" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M19 18 C20 10 14 6.5 7 9" stroke="#f3d9a6" stroke-width="0.9" stroke-dasharray="1.2 1.8" fill="none"/><path d="M10.5 4.8 L6.5 9.2 L11 12.2" stroke="${c}" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="19" cy="19.4" rx="2.6" ry="1.6" stroke="${c}" stroke-width="1.6" fill="none"/>`,
+    hint: (c) => `<path d="M9 5.5 Q12 1.5 15 5.5" stroke="${c}" stroke-width="1.6" fill="none"/><rect x="7.5" y="5" width="9" height="2.5" rx="0.8" fill="${c}"/><path d="M8.3 7.5 Q6.4 12.8 8.3 18 H15.7 Q17.6 12.8 15.7 7.5" stroke="${c}" stroke-width="1.8" fill="none"/><path d="M12 10 Q14.6 13.2 12 16 Q9.4 13.2 12 10 Z" fill="#e48a1a"/><rect x="6.5" y="18" width="11" height="2.6" rx="0.8" fill="${c}"/>`,
+    extra: (c) => `<rect x="3.5" y="7.5" width="12" height="12" rx="1" stroke="${c}" stroke-width="2" fill="none"/><path d="M3.5 11.5 H15.5 M3.5 15.5 H15.5" stroke="${c}" stroke-width="1.2"/><path d="M19.5 2.5 V9.5 M16 6 H23" stroke="${c}" stroke-width="2.2" stroke-linecap="round"/>`,
+    restart: (c) => `<circle cx="12" cy="12.5" r="5.6" fill="${c}"/>${Array.from({ length: 6 }, (_, i) => { const a = ((-90 + i * 60) * Math.PI) / 180; return `<circle cx="${f1(12 + 3 * Math.cos(a))}" cy="${f1(12.5 + 3 * Math.sin(a))}" r="1.15" fill="#c79a5e"/>`; }).join('')}<path d="M20.2 9 A8.6 8.6 0 1 0 20.6 15" stroke="${c}" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M21 4.5 V9.3 H16.2" stroke="${c}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+    pause: (c) => `<rect x="6.5" y="4.5" width="4" height="15" rx="0.8" fill="${c}"/><rect x="13.5" y="4.5" width="4" height="15" rx="0.8" fill="${c}"/><circle cx="8.5" cy="7" r="0.7" fill="#c79a5e"/><circle cx="15.5" cy="7" r="0.7" fill="#c79a5e"/>`,
+    settings: (c) => `<polygon points="${starPts(13.5, 12, 8.5, 3.6, 8, -90)}" fill="${c}"/><circle cx="13.5" cy="12" r="2.2" fill="#c79a5e"/><path d="M1.5 12 H5.5" stroke="${c}" stroke-width="2.4" stroke-linecap="round"/>`,
+    map: (c) => `<path d="M3 6.5 L9 4.5 L15 6.5 L21 4.5 V17.5 L15 19.5 L9 17.5 L3 19.5 Z" stroke="${c}" stroke-width="1.8" fill="none" stroke-linejoin="round"/><path d="M9 4.5 V17.5 M15 6.5 V19.5" stroke="${c}" stroke-width="1"/><path d="M5 15 Q8 11 11 13 T15 10" stroke="${c}" stroke-width="1" stroke-dasharray="1.4 1.4" fill="none"/><path d="M16 8.5 L19 11.5 M19 8.5 L16 11.5" stroke="#9e2b1a" stroke-width="1.8" stroke-linecap="round"/>`,
+    chest: (c) => `<path d="M3 11 Q3 4.5 12 4.5 Q21 4.5 21 11 Z" fill="${c}"/><rect x="3" y="11" width="18" height="9" rx="1" fill="${c}"/><path d="M3 11 H21 M8 4.9 V20 M16 4.9 V20" stroke="#c79a5e" stroke-width="1.1"/><rect x="10.5" y="10" width="3" height="4" rx="0.6" fill="#e9b83c"/>`,
+    help: (c) => `<path d="M5 4 H17 Q19.5 4 19.5 6.5 V20 H7 Q5 20 5 18 Z" stroke="${c}" stroke-width="1.8" fill="none"/><text x="12.3" y="16.6" text-anchor="middle" font-family="Rye" font-size="11" fill="${c}">?</text>`,
+    back: (c) => `<path d="M21 8 H8.5 L4 12 L8.5 16 H21 Z" fill="${c}"/><path d="M14 16 V22" stroke="${c}" stroke-width="2.4"/>`,
+  };
+  const icon = (name, x, y, size, c = C.ink) => `<g transform="translate(${x} ${y}) scale(${size / 24})">${ICON[name](c)}</g>`;
+
+  function freeTag(x, y, text, ink = '#2f6b2a') {
+    return `<g transform="translate(${x} ${y}) rotate(-3)"><path d="M0 0 H44 L50 8 L44 16 H0 Z" fill="${C.parchment}" stroke="#8a6a3a" stroke-width="1"/><circle cx="43" cy="8" r="1.6" fill="#6b4a24"/><text x="20" y="12" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="10" fill="${ink}" letter-spacing="0.5">${text}</text></g>`;
+  }
+
+  function actionTile(x, y, w, h, name, label, badge) {
+    return `${woodTile(x, y, w, h)}${icon(name, x + w / 2 - 13, y + 10, 26)}
+      <text x="${x + w / 2}" y="${y + 52}" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="12.5" fill="${C.cream}" letter-spacing="0.8">${label.toUpperCase()}</text>${badge || ''}`;
+  }
+
+  // ---------- crate ----------
+  function crate(x, y, w, h, opt = {}) {
+    const { selected, complete, extra, color } = opt;
+    const wg = uid('wood'), ig = uid('in'), ts = uid('ts'), bg = uid('brz');
+    const r = w * 0.1;
+    const t = w * 0.13;
+    const R = rng(Math.round(x * 7 + y));
+    const inX = x + t, inY = y + t * 1.5, inW = w - 2 * t, inH = h - t * 2.7;
+    const grain = Array.from({ length: 5 }, (_, i) => { const gx = inX + inW * (0.12 + i * 0.19) + R() * 3; return `<path d="M${f1(gx)} ${f1(inY + 4)} C${f1(gx + 2)} ${f1(inY + inH * 0.35)} ${f1(gx - 2)} ${f1(inY + inH * 0.65)} ${f1(gx + 1)} ${f1(inY + inH - 4)}" stroke="#56331d" stroke-opacity="0.55" stroke-width="0.9" fill="none"/>`; }).join('');
+    const band = (by, brass) => `<rect x="${f1(x - 1.5)}" y="${f1(by)}" width="${f1(w + 3)}" height="${f1(h * 0.035)}" rx="1.5" fill="${brass ? `url(#${bg})` : C.iron}" stroke="${brass ? '#6b4214' : '#1d1a19'}" stroke-width="0.8"/>` +
+      [x + t * 0.5, x + w - t * 0.5].map((rx) => `<circle cx="${f1(rx)}" cy="${f1(by + h * 0.0175)}" r="${f1(Math.max(1.2, w * 0.025))}" fill="${brass ? '#fff1b0' : '#9a938d'}"/>`).join('');
+    const bracket = (bx, flip) => `<path d="M${f1(bx)} ${f1(y + h - 2)} h${f1(flip * w * 0.22)} v${f1(-w * 0.07)} h${f1(-flip * w * 0.15)} v${f1(-w * 0.15)} h${f1(-flip * w * 0.07)} Z" fill="${C.brass}" stroke="#6b4214" stroke-width="0.8"/>`;
+    let out = `<defs>
+      <linearGradient id="${wg}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5e361c"/><stop offset="0.18" stop-color="#9a6435"/><stop offset="0.5" stop-color="#b07a45"/><stop offset="0.82" stop-color="#8c5a30"/><stop offset="1" stop-color="#5a321a"/></linearGradient>
+      <linearGradient id="${ig}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1f1009"/><stop offset="0.5" stop-color="#3a2214"/><stop offset="1" stop-color="#1f1009"/></linearGradient>
+      <linearGradient id="${ts}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0.6"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
+      <linearGradient id="${bg}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7dd8c"/><stop offset="1" stop-color="#a87420"/></linearGradient>
+    </defs>`;
+    if (selected) out += `<rect x="${f1(x - 6)}" y="${f1(y - 6)}" width="${f1(w + 12)}" height="${f1(h + 12)}" rx="${f1(r + 6)}" fill="#f2c94c" opacity="0.18"/>`;
+    out += `<ellipse cx="${f1(x + w / 2)}" cy="${f1(y + h + 3)}" rx="${f1(w * 0.56)}" ry="5" fill="#000" opacity="0.35"/>
+      <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${f1(r)}" fill="url(#${wg})" stroke="${complete ? darken(color, 0.2) : '#2b170c'}" stroke-width="${complete ? 3 : 2}"/>
+      <rect x="${f1(inX)}" y="${f1(inY)}" width="${f1(inW)}" height="${f1(inH)}" rx="${f1(r * 0.4)}" fill="url(#${ig})"/>
+      ${grain}
+      <path d="M${f1(inX + inW / 3)} ${f1(inY)} V${f1(inY + inH)} M${f1(inX + (2 * inW) / 3)} ${f1(inY)} V${f1(inY + inH)}" stroke="#140904" stroke-width="1.2" opacity="0.8"/>
+      <rect x="${f1(inX)}" y="${f1(inY)}" width="${f1(inW)}" height="${f1(inH * 0.12)}" fill="url(#${ts})"/>
+      ${band(y + h * 0.045, complete)}${band(y + h * 0.915, false)}
+      ${bracket(x + 1, 1)}${bracket(x + w - 1, -1)}`;
+    if (complete) {
+      const sx = x + w / 2, sy = y - w * 0.16;
+      out += `<path d="M${f1(sx)} ${f1(y + h * 0.045)} V${f1(sy + w * 0.1)}" stroke="#6b4214" stroke-width="1.4"/>
+        <circle cx="${f1(sx)}" cy="${f1(sy)}" r="${f1(w * 0.2)}" fill="${color}" stroke="#6b4214" stroke-width="2"/>
+        <circle cx="${f1(sx)}" cy="${f1(sy)}" r="${f1(w * 0.155)}" fill="none" stroke="${C.brassLight}" stroke-width="1.2"/>
+        <polygon points="${starPts(sx, sy + 0.5, w * 0.12, w * 0.05)}" fill="${C.cream}"/>`;
+    }
+    if (extra) {
+      out += `<path d="M${f1(x - 2)} ${f1(y + h * 0.13)} L${f1(x + w + 2)} ${f1(y + h * 0.18)} M${f1(x - 2)} ${f1(y + h * 0.16)} L${f1(x + w + 2)} ${f1(y + h * 0.21)}" stroke="#7a5a2c" stroke-width="5" stroke-linecap="round"/>
+        <path d="M${f1(x - 2)} ${f1(y + h * 0.13)} L${f1(x + w + 2)} ${f1(y + h * 0.18)} M${f1(x - 2)} ${f1(y + h * 0.16)} L${f1(x + w + 2)} ${f1(y + h * 0.21)}" stroke="${C.rope}" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="3 2"/>
+        <circle cx="${f1(x + w * 0.78)}" cy="${f1(y + h * 0.19)}" r="${f1(w * 0.08)}" fill="${C.rope}" stroke="#7a5a2c" stroke-width="1.2"/>`;
+    }
+    if (selected) {
+      out += `<rect x="${f1(x - 3)}" y="${f1(y - 3)}" width="${f1(w + 6)}" height="${f1(h + 6)}" rx="${f1(r + 3)}" fill="none" stroke="#f2c94c" stroke-width="3"/>
+        <rect x="${f1(x - 1)}" y="${f1(y - 1)}" width="${f1(w + 2)}" height="${f1(h + 2)}" rx="${f1(r + 1)}" fill="none" stroke="#fff1bf" stroke-width="1"/>`;
+    }
+    return out;
+  }
+
+  /** A crate with its stack of tokens; items bottom to top, `lifted` floats above. */
+  function crateWithItems(x, y, w, h, items, opt = {}) {
+    const t = w * 0.13;
+    const inY = y + t * 1.5, inH = h - t * 2.7;
+    const pitch = inH / 4;
+    const size = Math.min(w - 2 * t + 4, pitch) * 0.94;
+    let out = crate(x, y, w, h, opt);
+    items.forEach((id, i) => { out += token(P[id], x + w / 2, inY + inH - (i + 0.5) * pitch, size); });
+    if (opt.lifted) {
+      out += `<ellipse cx="${f1(x + w / 2)}" cy="${f1(y - 4)}" rx="${f1(size * 0.36)}" ry="3" fill="#000" opacity="0.3"/>`;
+      out += token(P[opt.lifted], x + w / 2, y - size * 0.62, size * 1.04);
+    }
+    return out;
+  }
+
+  // ---------- backgrounds ----------
+  function planks(w, h, seed = 5) {
+    const R = rng(seed);
+    let out = '';
+    const ph = 46;
+    for (let y = -10, k = 0; y < h; y += ph, k += 1) {
+      const tone = mixc('#4a2a17', '#61391f', R());
+      out += `<rect x="0" y="${y}" width="${w}" height="${ph}" fill="${tone}"/>`;
+      for (let i = 0; i < 3; i += 1) {
+        const yy = y + 8 + R() * (ph - 16);
+        out += `<path d="M0 ${f1(yy)} C${f1(w * 0.25)} ${f1(yy - 4 + R() * 8)} ${f1(w * 0.6)} ${f1(yy - 4 + R() * 8)} ${w} ${f1(yy)}" stroke="#000" stroke-opacity="${f1(0.12 + R() * 0.1)}" stroke-width="${f1(0.8 + R())}" fill="none"/>`;
+      }
+      const knotX = R() * w;
+      if (R() > 0.55) out += `<ellipse cx="${f1(knotX)}" cy="${f1(y + ph * 0.5)}" rx="9" ry="4" fill="none" stroke="#2a160b" stroke-opacity="0.45" stroke-width="1.2"/>`;
+      out += `<path d="M0 ${y} H${w}" stroke="#1e0f07" stroke-width="2.2"/>`;
+      const jx = (k % 2 ? 0.35 : 0.72) * w + R() * 30;
+      out += `<path d="M${f1(jx)} ${y} V${y + ph}" stroke="#1e0f07" stroke-width="2"/>`;
+      [jx - 9, jx + 9].forEach((nx) => { out += `<circle cx="${f1(nx)}" cy="${y + 9}" r="2.2" fill="#24140a"/><circle cx="${f1(nx)}" cy="${y + ph - 9}" r="2.2" fill="#24140a"/>`; });
+    }
+    const v = uid('vig');
+    out += `<defs><radialGradient id="${v}" cx="0.5" cy="0.45" r="0.75"><stop offset="0.55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.6"/></radialGradient></defs><rect width="${w}" height="${h}" fill="url(#${v})"/>`;
+    return out;
+  }
+
+  function cactusShape(x, base, hh, fill = C.sage) {
+    const wd = hh * 0.13;
+    return `<g>
+      <rect x="${f1(x - wd / 2)}" y="${f1(base - hh)}" width="${f1(wd)}" height="${f1(hh)}" rx="${f1(wd / 2)}" fill="${fill}"/>
+      <path d="M${f1(x - wd / 2)} ${f1(base - hh * 0.45)} H${f1(x - hh * 0.26)} V${f1(base - hh * 0.75)}" stroke="${fill}" stroke-width="${f1(wd * 0.8)}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M${f1(x + wd / 2)} ${f1(base - hh * 0.6)} H${f1(x + hh * 0.22)} V${f1(base - hh * 0.88)}" stroke="${fill}" stroke-width="${f1(wd * 0.8)}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M${f1(x)} ${f1(base - hh + wd * 0.5)} V${f1(base)}" stroke="${lighten(fill, 0.25)}" stroke-width="1" opacity="0.7"/>
+    </g>`;
+  }
+
+  function shipwreck(x, y, s) {
+    return `<g transform="translate(${x} ${y}) rotate(-9) scale(${s})">
+      <path d="M52 0 L46 -82" stroke="#4a2a17" stroke-width="5" stroke-linecap="round"/>
+      <path d="M30 -62 L66 -68" stroke="#4a2a17" stroke-width="3" stroke-linecap="round"/>
+      <path d="M33 -60 L64 -66 L63 -30 L57 -37 L51 -28 L45 -35 L39 -26 L34 -33 Z" fill="#eadbb8" stroke="#a88c5e" stroke-width="1"/>
+      <path d="M46 -82 L70 -78 L66 -71 L70 -66 L46 -70 Z" fill="#1e1a18"/>
+      <circle cx="57" cy="-74.5" r="2.6" fill="#f4e6c6"/><path d="M53 -70.5 L61 -78.5 M53 -78.5 L61 -70.5" stroke="#f4e6c6" stroke-width="1.2"/>
+      <path d="M96 -20 H126 L122 2 H98 Z" fill="#4a2a17" stroke="#2b170c" stroke-width="1.5"/>
+      <rect x="102" y="-15" width="5" height="6" fill="#d9b779"/><rect x="111" y="-15" width="5" height="6" fill="#2b170c"/>
+      <path d="M0 0 L124 0 L110 36 Q62 46 14 36 Z" fill="#5a3420" stroke="#2b170c" stroke-width="2"/>
+      <path d="M4 10 H120 M8 20 H116 M12 29 H112" stroke="#2b170c" stroke-width="1.2" opacity="0.7"/>
+      <path d="M40 14 l10 8 l-12 4 Z" fill="#2b170c"/>
+    </g>`;
+  }
+
+  function desert(w, h) {
+    const sky = uid('sky'), halo = uid('halo'), d1 = uid('dune');
+    const sx = w * 0.5, sy = h * 0.1;
+    const rays = Array.from({ length: 18 }, (_, i) => { const a = (i / 18) * Math.PI * 2; const a2 = a + 0.07; const L = w * 0.9; return `<polygon points="${sx},${sy} ${f1(sx + L * Math.cos(a))},${f1(sy + L * Math.sin(a))} ${f1(sx + L * Math.cos(a2))},${f1(sy + L * Math.sin(a2))}" fill="#fff8de" opacity="0.16"/>`; }).join('');
+    const hz = h * 0.5;
+    return `<defs>
+      <linearGradient id="${sky}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6fb2d6"/><stop offset="0.6" stop-color="#cfe4e2"/><stop offset="1" stop-color="#f4e2b6"/></linearGradient>
+      <radialGradient id="${halo}" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#fffbe8" stop-opacity="1"/><stop offset="0.3" stop-color="#fff3c4" stop-opacity="0.7"/><stop offset="1" stop-color="#fff3c4" stop-opacity="0"/></radialGradient>
+      <linearGradient id="${d1}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ecc98c"/><stop offset="1" stop-color="#c98f4f"/></linearGradient>
+    </defs>
+    <rect width="${w}" height="${h}" fill="url(#${sky})"/>
+    ${rays}
+    <circle cx="${sx}" cy="${sy}" r="${f1(w * 0.42)}" fill="url(#${halo})"/>
+    <circle cx="${sx}" cy="${sy}" r="${f1(w * 0.075)}" fill="#fffdf2"/>
+    <path d="M${f1(w * 0.12)} ${f1(h * 0.2)} q6 -5 12 0 q6 -5 12 0 M${f1(w * 0.2)} ${f1(h * 0.16)} q4 -3.5 8 0 q4 -3.5 8 0" stroke="#3a2a20" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path d="M0 ${hz} L0 ${f1(hz - h * 0.05)} L${f1(w * 0.08)} ${f1(hz - h * 0.05)} L${f1(w * 0.12)} ${f1(hz - h * 0.08)} L${f1(w * 0.3)} ${f1(hz - h * 0.08)} L${f1(w * 0.34)} ${f1(hz - h * 0.035)} L${f1(w * 0.58)} ${f1(hz - h * 0.035)} L${f1(w * 0.62)} ${f1(hz - h * 0.1)} L${f1(w * 0.84)} ${f1(hz - h * 0.1)} L${f1(w * 0.88)} ${f1(hz - h * 0.04)} L${w} ${f1(hz - h * 0.04)} L${w} ${hz} Z" fill="#c9a08c" opacity="0.85"/>
+    <path d="M0 ${f1(hz + h * 0.03)} L0 ${f1(hz - h * 0.06)} L${f1(w * 0.04)} ${f1(hz - h * 0.12)} L${f1(w * 0.2)} ${f1(hz - h * 0.12)} L${f1(w * 0.24)} ${f1(hz - h * 0.03)} L${f1(w * 0.7)} ${f1(hz - h * 0.02)} L${f1(w * 0.74)} ${f1(hz - h * 0.07)} L${f1(w * 0.86)} ${f1(hz - h * 0.07)} L${f1(w * 0.9)} ${f1(hz)} L${w} ${f1(hz + h * 0.01)} L${w} ${f1(hz + h * 0.04)} Z" fill="${C.terracotta}"/>
+    <path d="M${f1(w * 0.04)} ${f1(hz - h * 0.12)} L${f1(w * 0.2)} ${f1(hz - h * 0.12)} L${f1(w * 0.205)} ${f1(hz - h * 0.105)} L${f1(w * 0.035)} ${f1(hz - h * 0.105)} Z M${f1(w * 0.74)} ${f1(hz - h * 0.07)} L${f1(w * 0.86)} ${f1(hz - h * 0.07)} L${f1(w * 0.865)} ${f1(hz - h * 0.058)} L${f1(w * 0.735)} ${f1(hz - h * 0.058)} Z" fill="#d38a58"/>
+    <path d="M${f1(w * 0.07)} ${f1(hz - h * 0.1)} V${f1(hz + h * 0.02)} M${f1(w * 0.13)} ${f1(hz - h * 0.1)} V${f1(hz + h * 0.02)} M${f1(w * 0.78)} ${f1(hz - h * 0.055)} V${f1(hz + h * 0.02)}" stroke="#9a4f2c" stroke-width="2" opacity="0.6"/>
+    <path d="M0 ${f1(hz + h * 0.02)} Q${f1(w * 0.3)} ${f1(hz - h * 0.01)} ${f1(w * 0.55)} ${f1(hz + h * 0.03)} T${w} ${f1(hz + h * 0.01)} V${h} H0 Z" fill="url(#${d1})"/>
+    ${shipwreck(w * 0.6, hz + h * 0.065, w / 330)}
+    <path d="M${f1(w * 0.45)} ${f1(hz + h * 0.1)} Q${f1(w * 0.75)} ${f1(hz + h * 0.04)} ${w} ${f1(hz + h * 0.09)} V${f1(hz + h * 0.14)} H${f1(w * 0.45)} Z" fill="#e2b877"/>
+    ${cactusShape(w * 0.16, hz + h * 0.1, h * 0.12)}
+    ${cactusShape(w * 0.9, hz + h * 0.06, h * 0.06, '#6d8a43')}
+    <path d="M0 ${f1(h * 0.68)} Q${f1(w * 0.4)} ${f1(h * 0.63)} ${w} ${f1(h * 0.7)} V${h} H0 Z" fill="#d9a866"/>
+    <path d="M0 ${f1(h * 0.68)} Q${f1(w * 0.4)} ${f1(h * 0.63)} ${w} ${f1(h * 0.7)}" stroke="#f0d3a0" stroke-width="2" fill="none"/>
+    <g transform="translate(${f1(w * 0.86)} ${f1(h * 0.66)})" stroke="#8c6a3e" stroke-width="1.2" fill="none" opacity="0.9">
+      ${Array.from({ length: 10 }, (_, i) => `<ellipse cx="0" cy="0" rx="${12 - (i % 3)}" ry="${9 + (i % 4)}" transform="rotate(${i * 18})"/>`).join('')}
+    </g>`;
+  }
+
+  // ---------- logo ----------
+  function wordmark(cx, y, size) {
+    const g = uid('wm');
+    const common = `x="${cx}" y="${y}" text-anchor="middle" font-family="Rye" font-size="${size}" letter-spacing="1"`;
+    let out = `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0.1" stop-color="#fff6dc"/><stop offset="1" stop-color="#f0c060"/></linearGradient></defs>`;
+    for (let k = 7; k >= 1; k -= 1) out += `<text x="${cx + k * 0.8}" y="${y + k * 1}" text-anchor="middle" font-family="Rye" font-size="${size}" letter-spacing="1" fill="#6a2a12">PRISMASE</text>`;
+    out += `<text ${common} fill="none" stroke="#2b1208" stroke-width="${f1(size * 0.13)}" stroke-linejoin="round">PRISMASE</text>`;
+    out += `<text ${common} fill="url(#${g})">PRISMASE</text>`;
+    return out;
+  }
+  function ribbon(cx, y, w, label) {
+    const h = 26;
+    const x0 = cx - w / 2, x1 = cx + w / 2;
+    return `<path d="M${x0 - 22} ${y + 6} L${x0 + 4} ${y + 6} L${x0 + 4} ${y + h + 6} L${x0 - 22} ${y + h + 6} L${x0 - 12} ${y + h / 2 + 6} Z" fill="#7e2414"/>
+      <path d="M${x1 + 22} ${y + 6} L${x1 - 4} ${y + 6} L${x1 - 4} ${y + h + 6} L${x1 + 22} ${y + h + 6} L${x1 + 12} ${y + h / 2 + 6} Z" fill="#7e2414"/>
+      <path d="M${x0 + 4} ${y + h + 6} L${x0 + 12} ${y + h} H${x0 + 4} Z M${x1 - 4} ${y + h + 6} L${x1 - 12} ${y + h} H${x1 - 4} Z" fill="#4a120a"/>
+      <path d="M${x0 + 4} ${y} Q${cx} ${y - 6} ${x1 - 4} ${y} V${y + h} Q${cx} ${y + h - 6} ${x0 + 4} ${y + h} Z" fill="#b8432b" stroke="#5e1a0e" stroke-width="1.2"/>
+      <text x="${cx}" y="${y + 17}" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="12.5" letter-spacing="2.5" fill="${C.cream}">${label}</text>`;
+  }
+
+  // ---------- app icons ----------
+  function sunburst(n, c1, c2) {
+    let o = `<rect width="100" height="100" fill="${c1}"/>`;
+    for (let i = 0; i < n; i += 2) { const a = (i / n) * Math.PI * 2, b = ((i + 1) / n) * Math.PI * 2; o += `<polygon points="50,55 ${f1(50 + 90 * Math.cos(a))},${f1(55 + 90 * Math.sin(a))} ${f1(50 + 90 * Math.cos(b))},${f1(55 + 90 * Math.sin(b))}" fill="${c2}"/>`; }
+    return o;
+  }
+  /** Barrel along +x from the cylinder at the origin; grip hangs down-left. `flip` mirrors it. */
+  function revolver(x, y, rot, flip) {
+    return `<g transform="translate(${x} ${y}) scale(${flip} 1) rotate(${rot})">
+      <rect x="-2" y="-3.2" width="48" height="6.4" rx="1.6" fill="#2b1a12"/><rect x="42" y="-5.4" width="3" height="2.4" fill="#2b1a12"/><path d="M4 -1 H44" stroke="#5a3a28" stroke-width="1"/>
+      <rect x="-12" y="-6.5" width="15" height="13" rx="3" fill="#3a2418"/><circle cx="-4.5" cy="0" r="6.2" fill="#4a3122" stroke="#2b1a12" stroke-width="1"/>
+      <path d="M-4.5 -4 V4 M-8 -2 L-1 2 M-8 2 L-1 -2" stroke="#2b1a12" stroke-width="0.8"/>
+      <path d="M-12 4 L-20 22 Q-18 26 -11 25 L-3 7 Z" fill="#7a4a2a" stroke="#2b1a12" stroke-width="1"/>
+      <path d="M-3 7 Q2 13 -6 13" stroke="#2b1a12" stroke-width="1.6" fill="none"/>
+    </g>`;
+  }
+  function iconA() {
+    const g = uid('ia'), sk = uid('sk');
+    return `<defs><radialGradient id="${g}" cx="0.5" cy="0.55" r="0.7"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#3a0e05" stop-opacity="0.55"/></radialGradient>
+      <linearGradient id="${sk}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf0d6"/><stop offset="1" stop-color="#d9c49a"/></linearGradient></defs>
+      ${sunburst(28, '#b8432b', '#c9583a')}<rect width="100" height="100" fill="url(#${g})"/>
+      
+      <path d="M31 55 Q29 31 50 30 Q71 31 69 55 Q69 63 62 65 V73 H38 V65 Q31 63 31 55 Z" fill="url(#${sk})" stroke="#2b1a12" stroke-width="1.6"/>
+      <ellipse cx="42" cy="53" rx="6" ry="6.6" fill="#2b1a12"/><ellipse cx="58" cy="53" rx="6" ry="6.6" fill="#2b1a12"/>
+      <path d="M50 58 L46.5 64.5 H53.5 Z" fill="#2b1a12"/><path d="M43 68 V73 M47 68 V73 M51 68 V73 M55 68 V73" stroke="#2b1a12" stroke-width="1.3"/>
+      <g transform="translate(50 82) scale(0.72)">${revolver(-2, 0, -28, 1)}${revolver(2, 0, -28, -1)}</g>
+      <path d="M17 39 Q50 51 83 39 Q86 43 80 47 Q50 59 20 47 Q14 43 17 39 Z" fill="#6b3b1f" stroke="#2b1a12" stroke-width="1.6"/>
+      <path d="M31 42 Q29 21 39 15 Q50 21 61 15 Q71 21 69 42 Q50 46 31 42 Z" fill="#7e4524" stroke="#2b1a12" stroke-width="1.6"/>
+      <path d="M31 36 Q50 40 69 36 L69 41 Q50 45 31 41 Z" fill="#2b1a12"/>
+      <polygon points="${starPts(50, 38.8, 3.6, 1.5)}" fill="#f3d27a"/>
+      <path d="M40 19 Q45 21 48 19" stroke="#a8653a" stroke-width="1.2" fill="none"/>`;
+  }
+  function iconB() {
+    const g = uid('ib');
+    return `<defs><radialGradient id="${g}" cx="0.5" cy="0.5" r="0.7"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#05201e" stop-opacity="0.55"/></radialGradient></defs>
+      ${sunburst(28, '#2a8f84', '#34a196')}<rect width="100" height="100" fill="url(#${g})"/>
+      <circle cx="50" cy="50" r="41" fill="none" stroke="${C.rope}" stroke-width="3.2" stroke-dasharray="3.4 2"/>
+      <ellipse cx="51" cy="54" rx="31" ry="30" fill="#000" opacity="0.3"/>
+      ${doubloon(50, 50, 31, 11)}`;
+  }
+
+  // ---------- poster + sign ----------
+  function torn(x, y, w, h, seed) {
+    const R = rng(seed);
+    let d = `M${x} ${y}`;
+    const steps = 14;
+    for (let i = 1; i <= steps; i += 1) d += ` L${f1(x + (w * i) / steps)} ${f1(y + (R() - 0.5) * 5)}`;
+    for (let i = 1; i <= steps * 1.5; i += 1) d += ` L${f1(x + w + (R() - 0.5) * 5)} ${f1(y + (h * i) / (steps * 1.5))}`;
+    for (let i = steps - 1; i >= 0; i -= 1) d += ` L${f1(x + (w * i) / steps)} ${f1(y + h + (R() - 0.5) * 6)}`;
+    for (let i = steps * 1.5 - 1; i > 0; i -= 1) d += ` L${f1(x + (R() - 0.5) * 5)} ${f1(y + (h * i) / (steps * 1.5))}`;
+    return d + ' Z';
+  }
+  function wanted(x, y, w, h) {
+    const pg = uid('pg');
+    const cx = x + w / 2;
+    return `<defs><radialGradient id="${pg}" cx="0.5" cy="0.45" r="0.75"><stop offset="0" stop-color="#f3e2b6"/><stop offset="0.75" stop-color="#e2c48a"/><stop offset="1" stop-color="#b98f52"/></radialGradient></defs>
+      <path d="${torn(x + 4, y + 6, w, h, 9)}" fill="#000" opacity="0.4"/>
+      <path d="${torn(x, y, w, h, 9)}" fill="url(#${pg})" stroke="#8a6a3a" stroke-width="1"/>
+      <rect x="${x + 12}" y="${y + 12}" width="${w - 24}" height="${h - 24}" fill="none" stroke="${C.ink}" stroke-width="2"/>
+      <rect x="${x + 16}" y="${y + 16}" width="${w - 32}" height="${h - 32}" fill="none" stroke="${C.ink}" stroke-width="0.8"/>
+      ${[x + 10, x + w - 10].map((nx) => `<circle cx="${nx}" cy="${y + 10}" r="4" fill="#5a5450" stroke="#2a2522" stroke-width="1"/><circle cx="${nx - 1}" cy="${y + 9}" r="1.3" fill="#b9b2ab"/>`).join('')}
+      <text x="${cx}" y="${y + 58}" text-anchor="middle" font-family="Rye" font-size="38" fill="${C.ink}">BOUNTY</text>
+      <text x="${cx}" y="${y + 82}" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="15" letter-spacing="5" fill="${C.ink}">COLLECTED</text>
+      <path d="M${x + 40} ${y + 94} H${x + w - 40}" stroke="${C.ink}" stroke-width="1"/>
+      ${token(P.crimson, cx, y + 140, 72)}
+      <g transform="translate(${x + w - 62} ${y + 140}) rotate(-14)"><circle r="27" fill="none" stroke="#9e2b1a" stroke-width="2.4" opacity="0.85"/><circle r="22" fill="none" stroke="#9e2b1a" stroke-width="1" opacity="0.85"/><text y="-3" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="8" fill="#9e2b1a" letter-spacing="1" opacity="0.9">LEVEL</text><text y="11" text-anchor="middle" font-family="Rye" font-size="15" fill="#9e2b1a" opacity="0.9">12</text></g>
+      <text x="${cx}" y="${y + 206}" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="13" letter-spacing="3" fill="${C.ink}">REWARD</text>
+      <g>${doubloon(cx - 78, y + 233, 15, 21)}</g>
+      <text x="${cx - 56}" y="${y + 244}" font-family="Pirata One" font-size="32" fill="${C.ink}">10 Doubloons</text>
+      <text x="${cx}" y="${y + 272}" text-anchor="middle" font-family="Zilla Slab" font-weight="600" font-size="13" fill="#5a3a20">13 moves · 0:42 on the clock</text>
+      ${plankButton(x + 26, y + 290, w - 52, 46, 'Ride On')}
+      ${plankButton(x + 26, y + 346, w - 52, 40, 'DOUBLE THE BOUNTY', { variant: 'secondary', ad: true })}
+      <text x="${cx}" y="${y + h - 22}" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="13" letter-spacing="2" fill="#5a3a20">REPLAY</text>`;
+  }
+  function hangingSign(x, y, w) {
+    const g = uid('hs');
+    return `<path d="M${x + 30} ${y - 70} L${x + 30} ${y + 8} M${x + w - 30} ${y - 70} L${x + w - 30} ${y + 8}" stroke="#7a5a2c" stroke-width="4"/>
+      <path d="M${x + 30} ${y - 70} L${x + 30} ${y + 8} M${x + w - 30} ${y - 70} L${x + w - 30} ${y + 8}" stroke="${C.rope}" stroke-width="2.4" stroke-dasharray="3 2"/>
+      <defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a06a3a"/><stop offset="1" stop-color="#6e4223"/></linearGradient></defs>
+      <rect x="${x}" y="${y + 6}" width="${w}" height="74" rx="8" fill="#2e180b"/>
+      <rect x="${x}" y="${y}" width="${w}" height="74" rx="8" fill="url(#${g})" stroke="#3a1f0e" stroke-width="2"/>
+      <path d="M${x + 8} ${y + 37} H${x + w - 8}" stroke="#3a1f0e" stroke-opacity="0.5"/>
+      <circle cx="${x + 30}" cy="${y + 12}" r="3" fill="${C.brassLight}"/><circle cx="${x + w - 30}" cy="${y + 12}" r="3" fill="${C.brassLight}"/>
+      <text x="${x + w / 2}" y="${y + 34}" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="12" letter-spacing="3" fill="#f6dfb3">HOLD YER HORSES</text>
+      <text x="${x + w / 2}" y="${y + 62}" text-anchor="middle" font-family="Rye" font-size="24" fill="${C.cream}">Paused</text>`;
+  }
+
+  // ---------- phone mocks ----------
+  const PW = 390, PH = 844;
+  function topBar(level, sub) {
+    return `${woodTile(16, 58, 44, 44)}${icon('pause', 26, 68, 24, C.cream)}
+      <text x="${PW / 2}" y="84" text-anchor="middle" font-family="Rye" font-size="24" fill="${C.cream}">Level ${level}</text>
+      <text x="${PW / 2}" y="102" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="11" letter-spacing="2" fill="#e0c08c">${sub}</text>
+      ${coinPill(PW - 112, 61, 52)}`;
+  }
+  function actionBar(y) {
+    const w = 82, gap = (PW - 32 - w * 4) / 3;
+    return [
+      ['undo', 'Undo', freeTag(0, 0, '3 FREE')],
+      ['hint', 'Hint', freeTag(0, 0, '1 FREE')],
+      ['extra', 'Crate', null],
+      ['restart', 'Restart', null],
+    ].map(([n, l, b], i) => {
+      const x = 16 + i * (w + gap);
+      let badge = '';
+      if (b) badge = `<g transform="translate(${x + 14} ${y + 60})">${b}</g>`;
+      else if (n === 'extra') badge = `<g>${doubloon(x + 30, y + 68, 7, 4)}</g><text x="${x + 50}" y="${y + 72}" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="12" fill="${C.cream}">40</text>`;
+      return actionTile(x, y, w, 84, n, l, badge);
+    }).join('');
+  }
+  function gameMock() {
+    const s = 47;
+    const w = s * 1.32, h = s * 4.7;
+    const lift = s * 1.15;
+    const rows = [[0, 1, 2, 3], [4, 5, 6]];
+    const stacks = [
+      { items: ['crimson', 'sage', 'turquoise'], lifted: 'sage', selected: true },
+      { items: ['mustard', 'mustard', 'mustard', 'mustard'], complete: true, color: P.mustard.color },
+      { items: ['denim', 'crimson', 'sage', 'crimson'] },
+      { items: ['turquoise', 'denim', 'turquoise', 'denim'] },
+      { items: ['sage', 'crimson', 'denim', 'turquoise'] },
+      { items: [] },
+      { items: [], extra: true },
+    ];
+    let board = '';
+    rows.forEach((row, r) => {
+      const gx = w * 0.32;
+      const rowW = row.length * w + (row.length - 1) * gx;
+      row.forEach((idx, c) => {
+        const x = (PW - rowW) / 2 + c * (w + gx);
+        const y = 150 + lift + r * (h + lift + 22);
+        const st = stacks[idx];
+        board += crateWithItems(x, y, w, h, st.items, st);
+      });
+    });
+    const plaque = `<g transform="translate(${PW / 2 - 128} 668)"><path d="${torn(0, 0, 256, 34, 4)}" fill="${C.parchment}" stroke="#8a6a3a"/><polygon points="${starPts(20, 17, 7, 3)}" fill="#9e2b1a"/><text x="136" y="23" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="15" fill="${C.ink}">Tap another crate to place.</text></g>`;
+    return svg(PW, PH, `${planks(PW, PH, 12)}${topBar(12, 'EASY · 4 MOVES')}${board}${plaque}${actionBar(720)}`);
+  }
+  function menuMock() {
+    const tile = `${woodTile(16, 58, 132, 42)}${icon('chest', 26, 67, 24, C.cream)}<text x="58" y="85" font-family="Zilla Slab" font-weight="700" font-size="13" letter-spacing="1" fill="${C.cream}">DAILY</text><text x="136" y="86" text-anchor="end" font-family="Pirata One" font-size="20" fill="${C.brassLight}">+25</text>`;
+    const levelSign = `<rect x="${PW / 2 - 70}" y="548" width="140" height="26" rx="4" fill="#5a321a" stroke="#2b170c"/><text x="${PW / 2}" y="566" text-anchor="middle" font-family="Zilla Slab" font-weight="700" font-size="12" letter-spacing="2" fill="#f6dfb3">LEVEL 1 · EASY</text>`;
+    const iconRow = `${woodTile(PW / 2 - 56, 776, 48, 46)}${icon('help', PW / 2 - 44, 787, 24, C.cream)}${woodTile(PW / 2 + 8, 776, 48, 46)}${icon('settings', PW / 2 + 19, 787, 24, C.cream)}`;
+    return svg(PW, PH, `${desert(PW, PH)}${tile}${coinPill(PW - 112, 60, 50)}
+      <g transform="translate(${PW / 2 - 62} 128) scale(1.24)">${iconBEmblem()}</g>
+      ${wordmark(PW / 2, 330, 54)}${ribbon(PW / 2, 352, 220, 'SORT THE SPECTRUM')}
+      ${levelSign}${plankButton(32, 590, PW - 64, 58, 'Ride Out')}${plankButton(32, 664, PW - 64, 52, 'LEVEL SELECT', { variant: 'secondary' })}
+      ${iconRow}`);
+  }
+  function iconBEmblem() {
+    return `<circle cx="50" cy="50" r="46" fill="none" stroke="${C.rope}" stroke-width="3.2" stroke-dasharray="3.4 2"/>${doubloon(50, 50, 38, 11)}`;
+  }
+  function winMock() {
+    const dim = `<rect width="${PW}" height="${PH}" fill="#140904" opacity="0.62"/>`;
+    return svg(PW, PH, `${planks(PW, PH, 12)}${topBar(12, 'EASY · 13 MOVES')}${dim}${wanted(30, 150, PW - 60, 470)}`);
+  }
+  function pauseMock() {
+    const dim = `<rect width="${PW}" height="${PH}" fill="#140904" opacity="0.62"/>`;
+    const y0 = 290;
+    return svg(PW, PH, `${planks(PW, PH, 12)}${topBar(12, 'EASY · 4 MOVES')}${dim}${hangingSign(55, 200, PW - 110)}
+      ${plankButton(48, y0 + 10, PW - 96, 54, 'Back to It')}
+      ${plankButton(48, y0 + 78, PW - 96, 48, 'RESTART', { variant: 'secondary' })}
+      ${plankButton(48, y0 + 140, PW - 96, 48, 'SKIP LEVEL', { variant: 'secondary', ad: true })}
+      ${plankButton(48, y0 + 202, (PW - 108) / 2, 48, 'SETTINGS', { variant: 'secondary' })}
+      ${plankButton(60 + (PW - 108) / 2, y0 + 202, (PW - 108) / 2, 48, 'MENU', { variant: 'secondary' })}`);
+  }
+
+  // ---------- render ----------
+  const $ = (id) => document.getElementById(id);
+
+  $('icons').innerHTML = [['A', 'Đầu lâu đội mũ cao bồi', 'Chất "Jolly Roger" của dân ngoài vòng pháp luật: sọ đội mũ cao bồi, hai khẩu súng lục bắt chéo thay cho xương, nền nắng gắt.', iconA], ['B', 'Doubloon sheriff', 'Một đồng tiền vàng của hải tặc khắc sao sheriff, viền dây thừng, nền xanh ngọc kiểu trang sức miền Tây.', iconB]]
+    .map(([letter, title, desc, fn]) => {
+      const masked = (cls) => { const m = uid('mask'); return `<svg viewBox="0 0 100 100" class="${cls}"><defs><clipPath id="${m}"><rect width="100" height="100" rx="22.4"/></clipPath></defs><g clip-path="url(#${m})">${fn()}</g></svg>`; };
+      return `<div class="iconopt"><div class="letter">${letter}</div>${masked('big')}<div class="sizes">${masked('sm60')}${masked('sm40')}</div><div class="name"><b>${title}</b></div><p class="muted" style="font-size:15px;text-align:center">${desc}</p></div>`;
+    }).join('');
+
+  $('pieces').innerHTML = PIECES.map((p) => `<div class="card">${svg(120, 120, token(p, 60, 60, 112))}<div class="name">${p.label}</div><div class="sub">${p.name}${p.pirate ? ' · hải tặc' : ''}</div></div>`).join('');
+  const stripRow = () => svg(PIECES.length * 42 + 8, 46, PIECES.map((p, i) => token(p, 25 + i * 42, 23, 34)).join(''));
+  $('pieceStrip').innerHTML = stripRow();
+  $('pieceStripGray').innerHTML = stripRow();
+
+  const crateCard = (title, sub, body) => `<div class="card">${body}<div class="name">${title}</div><div class="sub">${sub}</div></div>`;
+  const cw = 70, ch = 250;
+  const crateSvg = (items, opt) => svg(140, 340, `<rect width="140" height="340" fill="#4a2a17"/>${planks(140, 340, 3)}${crateWithItems(35, 70, cw, ch, items, opt)}`);
+  $('crates').innerHTML = [
+    crateCard('Bình thường', 'Thùng gỗ, đai sắt, ke đồng', crateSvg(['crimson', 'denim', 'sage', 'turquoise'], {})),
+    crateCard('Đang chọn', 'Viền đồng sáng, quân trên cùng nhấc lên', crateSvg(['crimson', 'denim', 'sage'], { selected: true, lifted: 'turquoise' })),
+    crateCard('Hoàn thành', 'Đai đồng, treo huy hiệu sao theo màu', crateSvg(['plum', 'plum', 'plum', 'plum'], { complete: true, color: P.plum.color })),
+    crateCard('Thùng thêm', 'Thùng mua thêm có dây thừng buộc ngang', crateSvg([], { extra: true })),
+  ].join('');
+
+  $('phones').innerHTML = [
+    ['Menu: sa mạc giữa trưa, xác tàu hải tặc, logo doubloon', menuMock()],
+    ['Đang chơi: thùng gỗ trên mặt quầy saloon', gameMock()],
+    ['Thắng: tờ truy nã "Bounty Collected"', winMock()],
+    ['Tạm dừng: biển gỗ treo dây thừng', pauseMock()],
+  ].map(([cap, s]) => `<div class="phone"><div class="frame">${s}</div><div class="cap">${cap}</div></div>`).join('');
+
+  $('kit').innerHTML = svg(760, 150, `${planks(760, 150, 8)}
+    ${plankButton(20, 20, 220, 54, 'Ride Out')}
+    ${plankButton(260, 20, 220, 50, 'LEVEL SELECT', { variant: 'secondary' })}
+    ${plankButton(500, 20, 240, 50, 'EXTRA CRATE', { variant: 'secondary', ad: true })}
+    ${coinPill(20, 96, 1250)}
+    ${freeTag(140, 106, '3 FREE')}${freeTag(210, 106, '1 FREE')}
+    <g>${doubloon(300, 114, 14, 5)}</g><text x="322" y="120" font-family="Zilla Slab" font-weight="700" font-size="14" fill="${C.cream}">Doubloon</text>`);
+
+  $('actionIcons').innerHTML = [
+    ['undo', 'Undo · dây thòng lọng'], ['hint', 'Hint · đèn bão'], ['extra', 'Thêm thùng'], ['restart', 'Restart · ổ quay'],
+    ['pause', 'Pause · hai tấm ván'], ['settings', 'Settings · cựa giày'], ['map', 'Chọn level · bản đồ'], ['chest', 'Quà ngày · rương báu'],
+    ['help', 'Hướng dẫn · cuộn giấy'], ['back', 'Quay lại · biển chỉ đường'],
+  ].map(([n, l]) => `<div class="card">${svg(96, 96, `${woodTile(8, 8, 80, 78)}${icon(n, 24, 22, 48, C.cream)}`)}<div class="sub">${l}</div></div>`).join('');
+
+  $('palette').innerHTML = [
+    ['Trời giữa trưa', '#6fb2d6', 'Nền menu'], ['Cát', '#e4bc7e', 'Đồi cát'], ['Đất nung', '#b5653d', 'Mesa'],
+    ['Gỗ saloon', '#5a3420', 'Nền khi chơi'], ['Gỗ mộc', '#b07a45', 'Thùng, nút phụ'], ['Đỏ ván sơn', '#b8432b', 'Nút chính'],
+    ['Đồng thau', '#c9962e', 'Viền, đinh, ke'], ['Giấy truy nã', '#ead6a6', 'Poster, nhãn'], ['Mực', '#2b1a10', 'Chữ trên giấy'],
+    ['Kem', '#fbefd5', 'Chữ trên gỗ'], ['Ngọc lam', '#2a9d8f', 'Điểm nhấn miền Tây'], ['Sắt', '#3b3533', 'Đai thùng'],
+  ].map(([n, c, u]) => `<div class="sw"><i style="background:${c}"></i><span><b>${n}</b>${c} · ${u}</span></div>`).join('');
+</script>

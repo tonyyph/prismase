@@ -96,7 +96,7 @@ export const MockAdOverlay = () => {
 };
 
 const styles = StyleSheet.create({
-  root: { backgroundColor: '#03050A', zIndex: 100 },
+  root: { backgroundColor: '#1e0f07', zIndex: 100 },
   safe: { flex: 1, padding: spacing.xl },
   top: { flexDirection: 'row', justifyContent: 'space-between' },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.md },

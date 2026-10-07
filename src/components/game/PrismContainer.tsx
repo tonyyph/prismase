@@ -13,6 +13,7 @@ import Animated, {
 import { getPrismColor } from '../../game/constants';
 import type { ContainerState } from '../../game/types';
 import { colors } from '../../theme';
+import { CrateArt, CrateMedallion } from '../art/CrateArt';
 import { type BoardLayout, type Rect, liftCenter, slotCenter } from './boardLayout';
 import { PrismItem } from './PrismItem';
 
@@ -109,13 +110,7 @@ export const PrismContainer = memo(function PrismContainer({
   }));
 
   const color = complete && container.items[0] ? getPrismColor(container.items[0].colorId) : null;
-  const borderColor = selected
-    ? colors.cyan
-    : color
-      ? color.base
-      : container.isExtra
-        ? 'rgba(167,139,250,0.45)'
-        : 'rgba(255,255,255,0.20)';
+  const medallion = slot * 0.62;
 
   const label = container.items.length
     ? container.items.map((item) => getPrismColor(item.colorId).name).join(', ')
@@ -137,39 +132,40 @@ export const PrismContainer = memo(function PrismContainer({
         accessibilityLabel={`Prism ${index + 1}${complete ? ', complete' : ''}: ${label}`}
         accessibilityState={{ selected }}
       >
-        <View
-          style={[
-            styles.tube,
-            {
-              top: liftSpace,
-              width: tubeWidth,
-              height: tubeHeight,
-              borderColor,
-              borderTopLeftRadius: tubeWidth * 0.22,
-              borderTopRightRadius: tubeWidth * 0.22,
-              borderBottomLeftRadius: tubeWidth / 2,
-              borderBottomRightRadius: tubeWidth / 2,
-              backgroundColor: color ? `${color.base}1F` : 'rgba(255,255,255,0.045)',
-              shadowColor: selected ? colors.cyan : (color?.base ?? '#000'),
-              shadowOpacity: selected || color ? 0.75 : 0,
-              shadowRadius: selected ? 14 : 10,
-            },
-          ]}
-        >
-          <LinearGradient
-            colors={['rgba(255,255,255,0.16)', 'rgba(255,255,255,0.0)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={[styles.sheen, { width: tubeWidth * 0.32 }]}
-          />
+        {selected ? (
           <View
+            pointerEvents="none"
             style={[
-              styles.rim,
-              { width: tubeWidth * 0.62, left: tubeWidth * 0.19 - 1.5 },
-              selected && { backgroundColor: 'rgba(34,211,238,0.6)' },
+              styles.selection,
+              {
+                top: liftSpace - 4,
+                width: tubeWidth + 8,
+                height: tubeHeight + 8,
+                borderRadius: tubeWidth * 0.14,
+              },
             ]}
           />
+        ) : null}
+        <View style={[styles.crate, { top: liftSpace - 2 }]}>
+          <CrateArt
+            width={tubeWidth}
+            height={tubeHeight}
+            seed={index * 31 + 7}
+            complete={color?.base}
+            extra={container.isExtra}
+          />
         </View>
+        {color ? (
+          <View
+            pointerEvents="none"
+            style={[
+              styles.medallion,
+              { top: liftSpace - medallion * 0.78, left: tubeWidth / 2 - medallion / 2 },
+            ]}
+          >
+            <CrateMedallion size={medallion} color={color.base} />
+          </View>
+        ) : null}
 
         {container.items.slice(0, -1).map((item, i) =>
           item.id === hiddenItemId ? null : (
@@ -197,8 +193,7 @@ export const PrismContainer = memo(function PrismContainer({
                 top: liftSpace,
                 width: tubeWidth,
                 height: tubeHeight,
-                borderBottomLeftRadius: tubeWidth / 2,
-                borderBottomRightRadius: tubeWidth / 2,
+                borderRadius: tubeWidth * 0.1,
               },
             ]}
           >
@@ -206,7 +201,7 @@ export const PrismContainer = memo(function PrismContainer({
               style={[styles.shimmer, { width: tubeWidth * 2, left: -tubeWidth / 2 }, shimmerStyle]}
             >
               <LinearGradient
-                colors={['rgba(255,255,255,0)', 'rgba(255,255,255,0.45)', 'rgba(255,255,255,0)']}
+                colors={['rgba(255,236,170,0)', 'rgba(255,236,170,0.5)', 'rgba(255,236,170,0)']}
                 style={StyleSheet.absoluteFill}
               />
             </Animated.View>
@@ -219,20 +214,19 @@ export const PrismContainer = memo(function PrismContainer({
 
 const styles = StyleSheet.create({
   container: { position: 'absolute' },
-  tube: {
+  crate: { position: 'absolute', left: -2 },
+  selection: {
     position: 'absolute',
-    left: 0,
-    borderWidth: 1.5,
+    left: -4,
+    borderWidth: 3,
+    borderColor: colors.gold,
+    backgroundColor: 'rgba(242,201,76,0.16)',
+    shadowColor: colors.gold,
+    shadowOpacity: 0.7,
+    shadowRadius: 10,
     shadowOffset: { width: 0, height: 0 },
   },
-  sheen: { position: 'absolute', left: 3, top: 6, bottom: 12, borderRadius: 8 },
-  rim: {
-    position: 'absolute',
-    top: -3,
-    height: 3,
-    borderRadius: 2,
-    backgroundColor: 'rgba(255,255,255,0.28)',
-  },
+  medallion: { position: 'absolute' },
   item: { position: 'absolute' },
   shimmerClip: { position: 'absolute', left: 0, overflow: 'hidden' },
   shimmer: { position: 'absolute', top: '-30%', height: '30%' },

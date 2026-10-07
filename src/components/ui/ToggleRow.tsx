@@ -1,12 +1,12 @@
-import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, Switch, View } from 'react-native';
 
 import { haptic } from '../../hooks/useHaptics';
 import { MIN_TOUCH, colors, spacing } from '../../theme';
+import { WesternIcon, type WesternIconName } from '../art/WesternIcon';
 import { AppText } from './AppText';
 
 type Props = {
-  icon: keyof typeof Ionicons.glyphMap;
+  icon: WesternIconName;
   label: string;
   description?: string;
   value: boolean;
@@ -16,12 +16,14 @@ type Props = {
 export const ToggleRow = ({ icon, label, description, value, onChange }: Props) => (
   <View style={styles.row} accessibilityRole="switch" accessibilityState={{ checked: value }}>
     <View style={styles.icon}>
-      <Ionicons name={icon} size={20} color={colors.cyan} />
+      <WesternIcon name={icon} size={22} color={colors.ink} />
     </View>
     <View style={styles.text}>
-      <AppText variant="label">{label}</AppText>
+      <AppText variant="heading" color={colors.textPrimary}>
+        {label}
+      </AppText>
       {description ? (
-        <AppText variant="caption" color={colors.textSecondary}>
+        <AppText variant="body" color={colors.textSecondary} style={styles.desc}>
           {description}
         </AppText>
       ) : null}
@@ -33,9 +35,9 @@ export const ToggleRow = ({ icon, label, description, value, onChange }: Props) 
         haptic('tap');
         onChange(next);
       }}
-      trackColor={{ false: 'rgba(148,163,184,0.3)', true: colors.violet }}
-      thumbColor={colors.textPrimary}
-      ios_backgroundColor="rgba(148,163,184,0.3)"
+      trackColor={{ false: '#4a2a17', true: colors.brick }}
+      thumbColor={colors.parchment}
+      ios_backgroundColor="#4a2a17"
     />
   </View>
 );
@@ -49,12 +51,15 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.sm,
   },
   icon: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    backgroundColor: 'rgba(34,211,238,0.10)',
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: colors.parchment,
+    borderWidth: 1.5,
+    borderColor: colors.brassDark,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: { flex: 1, gap: 2 },
+  text: { flex: 1, gap: 1 },
+  desc: { fontSize: 14, lineHeight: 19 },
 });

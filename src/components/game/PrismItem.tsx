@@ -1,108 +1,70 @@
 import { memo } from 'react';
-import Svg, {
-  Circle,
-  Defs,
-  Ellipse,
-  LinearGradient,
-  Path,
-  Polygon,
-  RadialGradient,
-  Stop,
-} from 'react-native-svg';
+import Svg, { Circle, Defs, G, LinearGradient, Path, RadialGradient, Stop } from 'react-native-svg';
 
 import { getPrismColor } from '../../game/constants';
+import { darken, lighten } from '../../utils/color';
+import { Emblem } from '../art/Emblem';
+import { f1, scallopPath } from '../art/geometry';
 
 type Props = { colorId: string; size: number };
 
+const RIM = scallopPath(50, 50, 48, 3.2, 18);
+const BEADS = Array.from({ length: 18 }, (_, i) => {
+  const a = (i * Math.PI) / 9 + 0.17;
+  return [f1(50 + 42.3 * Math.cos(a)), f1(50 + 42.3 * Math.sin(a))] as const;
+});
+
 /**
- * One crystal. Each colour has a fixed cut (gem, orb or shard) so that similar hues still read
- * differently, which matters for colour-blind players.
+ * One playing piece: a scalloped brass concho with an enamel face and a carved emblem.
+ * Colour and emblem always travel together, so pieces never rely on hue alone.
  */
 export const PrismItem = memo(function PrismItem({ colorId, size }: Props) {
   const color = getPrismColor(colorId);
-  const id = `g-${color.id}`;
-
-  if (color.variant === 'orb') {
-    return (
-      <Svg width={size} height={size} viewBox="0 0 100 100">
-        <Defs>
-          <RadialGradient id={id} cx="38%" cy="32%" r="70%">
-            <Stop offset="0" stopColor={color.light} />
-            <Stop offset="0.5" stopColor={color.base} />
-            <Stop offset="1" stopColor={color.dark} />
-          </RadialGradient>
-        </Defs>
-        <Circle cx="50" cy="50" r="44" fill={`url(#${id})`} />
-        <Circle
-          cx="50"
-          cy="50"
-          r="44"
-          fill="none"
-          stroke={color.light}
-          strokeOpacity={0.35}
-          strokeWidth={2}
-        />
-        <Ellipse
-          cx="37"
-          cy="30"
-          rx="15"
-          ry="9"
-          fill="#FFFFFF"
-          opacity={0.6}
-          transform="rotate(-25 37 30)"
-        />
-        <Circle cx="66" cy="70" r="5" fill="#FFFFFF" opacity={0.18} />
-      </Svg>
-    );
-  }
-
-  if (color.variant === 'shard') {
-    // An isometric crystal: lit top face, mid left face, shaded right face.
-    return (
-      <Svg width={size} height={size} viewBox="0 0 100 100">
-        <Defs>
-          <LinearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor={color.base} />
-            <Stop offset="1" stopColor={color.dark} />
-          </LinearGradient>
-        </Defs>
-        <Polygon points="50,5 90,27 50,49 10,27" fill={color.light} />
-        <Polygon points="10,27 50,49 50,95 10,73" fill={color.base} />
-        <Polygon points="90,27 50,49 50,95 90,73" fill={`url(#${id})`} />
-        <Polygon
-          points="50,5 90,27 90,73 50,95 10,73 10,27"
-          fill="none"
-          stroke="#FFFFFF"
-          strokeOpacity={0.35}
-          strokeWidth={2}
-          strokeLinejoin="round"
-        />
-        <Path d="M22 30 L50 14 L58 18 L30 34 Z" fill="#FFFFFF" opacity={0.45} />
-      </Svg>
-    );
-  }
-
-  // Gem: a brilliant cut seen from the side, crown on top and pavilion below.
+  const c = color.base;
+  const carving = color.inkEmblem ? '#2b1a10' : '#fbefd5';
   return (
     <Svg width={size} height={size} viewBox="0 0 100 100">
       <Defs>
-        <LinearGradient id={id} x1="0.1" y1="0" x2="0.9" y2="1">
-          <Stop offset="0" stopColor={color.light} />
-          <Stop offset="0.45" stopColor={color.base} />
-          <Stop offset="1" stopColor={color.dark} />
+        <LinearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+          <Stop offset="0" stopColor="#f7dd8c" />
+          <Stop offset="0.5" stopColor="#cc9a34" />
+          <Stop offset="1" stopColor="#7a4f14" />
         </LinearGradient>
+        <RadialGradient id="enamel" cx="0.38" cy="0.32" r="0.78">
+          <Stop offset="0" stopColor={lighten(c, 0.32)} />
+          <Stop offset="0.55" stopColor={c} />
+          <Stop offset="1" stopColor={darken(c, 0.38)} />
+        </RadialGradient>
       </Defs>
-      <Polygon points="28,10 72,10 94,36 50,93 6,36" fill={`url(#${id})`} strokeLinejoin="round" />
-      <Polygon points="28,10 72,10 94,36 6,36" fill="#FFFFFF" opacity={0.2} />
-      <Path
-        d="M6 36 H94 M28 10 L38 36 L50 93 L62 36 L72 10 M50 10 L38 36 M50 10 L62 36"
-        stroke="#FFFFFF"
-        strokeOpacity={0.35}
-        strokeWidth={2}
-        fill="none"
-        strokeLinejoin="round"
+      <Path d={RIM} fill="url(#rim)" stroke="#4a2a0e" strokeWidth={1.6} />
+      {BEADS.map(([x, y]) => (
+        <Circle key={`${x}-${y}`} cx={x} cy={y} r={1.3} fill="#6b4214" opacity={0.65} />
+      ))}
+      <Circle cx={50} cy={50} r={38.6} fill="#5a3510" />
+      <Circle
+        cx={50}
+        cy={50}
+        r={36.6}
+        fill="url(#enamel)"
+        stroke={darken(c, 0.55)}
+        strokeWidth={1.2}
       />
-      <Polygon points="30,14 46,14 38,32 14,34" fill="#FFFFFF" opacity={0.5} />
+      <G transform="translate(10 10) scale(0.8)">
+        {color.inkEmblem ? null : (
+          <G transform="translate(1.6 2.2)" opacity={0.4}>
+            <Emblem name={color.icon} fill="#000" accent="#000" />
+          </G>
+        )}
+        <Emblem name={color.icon} fill={carving} accent={c} />
+      </G>
+      <Path
+        d="M22 42 A30 30 0 0 1 56 16"
+        stroke="#ffffff"
+        strokeOpacity={0.35}
+        strokeWidth={4}
+        strokeLinecap="round"
+        fill="none"
+      />
     </Svg>
   );
 });

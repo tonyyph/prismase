@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { PRISM_COLORS } from '../../game/constants';
+import { Doubloon } from '../art/Doubloon';
 import { createRandom } from '../../utils/seedRandom';
 
 type Piece = {
@@ -36,23 +36,25 @@ const Particle = ({ piece, height }: { piece: Piece; height: number }) => {
       { rotate: `${piece.spin * t.value}deg` },
     ],
   }));
-  return (
+  // "round" pieces are doubloons; the rest are scraps of paper.
+  return piece.round ? (
+    <Animated.View style={[styles.piece, style]}>
+      <Doubloon size={piece.size * 1.6} />
+    </Animated.View>
+  ) : (
     <Animated.View
       style={[
         styles.piece,
-        {
-          width: piece.size,
-          height: piece.round ? piece.size : piece.size * 0.45,
-          borderRadius: piece.round ? piece.size / 2 : 2,
-          backgroundColor: piece.color,
-        },
+        { width: piece.size, height: piece.size * 0.7, backgroundColor: piece.color },
         style,
       ]}
     />
   );
 };
 
-/** A light shower of spectral flecks, generated once per win. */
+const SCRAPS = ['#ead6a6', '#f3e2b6', '#c9a565', '#b8432b'];
+
+/** A shower of doubloons and torn paper scraps, generated once per win. */
 export const Confetti = memo(function Confetti({ seed }: { seed: string }) {
   const { width, height } = useWindowDimensions();
   const pieces = useMemo(() => {
@@ -62,9 +64,9 @@ export const Confetti = memo(function Confetti({ seed }: { seed: string }) {
       drift: (random() - 0.5) * 120,
       delay: random() * 400,
       size: 6 + random() * 7,
-      color: PRISM_COLORS[Math.floor(random() * 6)].base,
+      color: SCRAPS[Math.floor(random() * SCRAPS.length)],
       spin: (random() - 0.5) * 720,
-      round: random() > 0.6,
+      round: random() > 0.45,
     }));
   }, [seed, width]);
 

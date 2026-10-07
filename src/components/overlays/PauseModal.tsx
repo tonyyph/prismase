@@ -3,10 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import { useRewardedReady } from '../../hooks/useAds';
 import { usePrismaseGame } from '../../hooks/usePrismaseGame';
 import { useGameStore } from '../../store/gameStore';
-import { colors, spacing } from '../../theme';
+import { spacing } from '../../theme';
 import { AdBadge } from '../ui/AdBadge';
 import { AppButton } from '../ui/AppButton';
-import { AppText } from '../ui/AppText';
+import { HangingSign } from './HangingSign';
 import { ModalShell } from './ModalShell';
 
 export const PauseModal = () => {
@@ -15,17 +15,14 @@ export const PauseModal = () => {
   const skipReady = useRewardedReady('reward_skip_level');
 
   return (
-    <ModalShell onDismiss={game.resumeGame}>
-      <AppText variant="caption" color={colors.textSecondary} align="center">
-        LEVEL {level}
-      </AppText>
-      <AppText variant="title" align="center" style={styles.title}>
-        Paused
-      </AppText>
+    <ModalShell
+      onDismiss={game.resumeGame}
+      header={<HangingSign caption={`HOLD YER HORSES · LEVEL ${level}`} title="Paused" />}
+    >
       <View style={styles.buttons}>
-        <AppButton variant="primary" icon="play" label="Resume" onPress={game.resumeGame} />
+        <AppButton variant="primary" icon="play" label="Back to It" onPress={game.resumeGame} />
         <AppButton
-          icon="refresh"
+          icon="restart"
           label="Restart"
           onPress={() => {
             game.resumeGame();
@@ -33,7 +30,7 @@ export const PauseModal = () => {
           }}
         />
         <AppButton
-          icon="play-skip-forward"
+          icon="skip"
           label="Skip level"
           accessory={<AdBadge />}
           disabled={!skipReady}
@@ -44,13 +41,13 @@ export const PauseModal = () => {
           <View style={styles.half}>
             <AppButton
               compact
-              icon="settings-outline"
+              icon="settings"
               label="Settings"
               onPress={() => game.navigate('settings')}
             />
           </View>
           <View style={styles.half}>
-            <AppButton compact icon="home-outline" label="Menu" onPress={game.backToMenu} />
+            <AppButton compact icon="home" label="Menu" onPress={game.backToMenu} />
           </View>
         </View>
       </View>
@@ -59,7 +56,6 @@ export const PauseModal = () => {
 };
 
 const styles = StyleSheet.create({
-  title: { marginBottom: spacing.lg },
   buttons: { gap: spacing.md },
   row: { flexDirection: 'row', gap: spacing.md },
   half: { flex: 1 },

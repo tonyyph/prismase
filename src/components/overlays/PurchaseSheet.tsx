@@ -1,26 +1,23 @@
-import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, View } from 'react-native';
 
 import { COSTS, type PaidAction } from '../../game/economy';
 import { useRewardedReady } from '../../hooks/useAds';
 import { useGameStore } from '../../store/gameStore';
 import { colors, spacing } from '../../theme';
+import { WesternIcon, type WesternIconName } from '../art/WesternIcon';
 import { AdBadge } from '../ui/AdBadge';
 import { AppButton } from '../ui/AppButton';
 import { AppText } from '../ui/AppText';
 import { CoinIcon } from '../ui/CoinIcon';
 import { ModalShell } from './ModalShell';
 
-const COPY: Record<
-  PaidAction,
-  { title: string; body: string; icon: keyof typeof Ionicons.glyphMap }
-> = {
-  hint: { title: 'Hint', body: 'Light up a good next move.', icon: 'bulb-outline' },
-  undo: { title: 'Undo', body: 'Free undos are used up for this level.', icon: 'arrow-undo' },
+const COPY: Record<PaidAction, { title: string; body: string; icon: WesternIconName }> = {
+  hint: { title: 'Hint', body: 'Light the lantern on a good next move.', icon: 'hint' },
+  undo: { title: 'Undo', body: 'Free undos are used up for this level.', icon: 'undo' },
   extraPrism: {
-    title: 'Extra Prism',
-    body: 'Add one empty prism to this level.',
-    icon: 'add-circle-outline',
+    title: 'Extra Crate',
+    body: 'Add one empty crate to this level.',
+    icon: 'extra',
   },
 };
 
@@ -45,7 +42,7 @@ export const PurchaseSheet = ({ action }: { action: PaidAction }) => {
     <ModalShell onDismiss={busy ? undefined : close}>
       <View style={styles.header}>
         <View style={styles.icon}>
-          <Ionicons name={copy.icon} size={26} color={colors.cyan} />
+          <WesternIcon name={copy.icon} size={30} color={colors.ink} />
         </View>
         <AppText variant="title">{copy.title}</AppText>
         <AppText color={colors.textSecondary} align="center">
@@ -55,13 +52,12 @@ export const PurchaseSheet = ({ action }: { action: PaidAction }) => {
       <View style={styles.buttons}>
         <AppButton
           variant="primary"
-          label={`Use ${cost} coins`}
+          label={`Pay ${cost} doubloons`}
           accessory={<CoinIcon size={16} />}
           disabled={coins < cost || busy}
           onPress={payWithCoins}
         />
         <AppButton
-          icon="play-circle-outline"
           label="Watch an ad"
           accessory={<AdBadge />}
           disabled={!adReady || busy}
@@ -71,7 +67,7 @@ export const PurchaseSheet = ({ action }: { action: PaidAction }) => {
       </View>
       {coins < cost ? (
         <AppText variant="caption" color={colors.textMuted} align="center" style={styles.note}>
-          You have {coins} coins
+          You have {coins} doubloons
         </AppText>
       ) : null}
     </ModalShell>
@@ -83,10 +79,12 @@ const styles = StyleSheet.create({
   icon: {
     width: 56,
     height: 56,
-    borderRadius: 20,
+    borderRadius: 28,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(34,211,238,0.12)',
+    backgroundColor: colors.parchment,
+    borderWidth: 2,
+    borderColor: colors.brassDark,
     marginBottom: spacing.sm,
   },
   buttons: { gap: spacing.md },

@@ -31,7 +31,6 @@ export const generateSolvedContainers = (config: LevelConfig): ContainerState[] 
     items: Array.from({ length: config.containerCapacity }, (_, n): PrismItem => ({
       id: `${color.id}-${n}`,
       colorId: color.id,
-      variant: color.variant,
     })),
   }));
   return [

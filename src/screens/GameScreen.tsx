@@ -24,7 +24,6 @@ import { colors, spacing } from '../theme';
 
 type Tutorial = {
   message: string;
-  icon: 'hand-left-outline' | 'cube-outline' | 'bulb-outline' | 'color-palette-outline';
   highlight?: string;
 };
 
@@ -33,14 +32,12 @@ const tutorialFor = (level: LevelState): Tutorial | null => {
   if (level.level > TUTORIAL_LAST_LEVEL || level.completedAt) return null;
   const moves = level.moveHistory.length;
   if (level.level === 1) {
-    if (moves >= 3)
-      return { message: 'Match colors to complete the level.', icon: 'color-palette-outline' };
+    if (moves >= 3) return { message: 'Match colors to complete the level.' };
     const best = findBestMove(level.containers);
     const selected = level.selectedContainerId;
     if (!selected)
       return {
-        message: 'Tap a prism to pick.',
-        icon: 'hand-left-outline',
+        message: 'Tap a crate to pick.',
         highlight: best?.sourceId,
       };
     const target =
@@ -51,24 +48,23 @@ const tutorialFor = (level: LevelState): Tutorial | null => {
               (c) => c.items.length && canMove(level.containers, selected, c.id),
             ) ?? level.containers.find((c) => canMove(level.containers, selected, c.id))
           )?.id;
-    return { message: 'Tap another prism to place.', icon: 'hand-left-outline', highlight: target };
+    return { message: 'Tap another crate to place.', highlight: target };
   }
   if (level.level === 2) {
-    if (moves >= 4)
-      return { message: 'Match colors to complete the level.', icon: 'color-palette-outline' };
-    return { message: 'Empty prisms hold any color.', icon: 'cube-outline' };
+    if (moves >= 4) return { message: 'Match colors to complete the level.' };
+    return { message: 'Empty crates take any color.' };
   }
-  return { message: 'Stuck? Undo, or ask for a hint.', icon: 'bulb-outline' };
+  return { message: 'Stuck? Undo, or light the lantern for a hint.' };
 };
 
 const highlightsFor = (level: LevelState | null, tutorial: Tutorial | null): Highlight[] => {
   if (level?.hint) {
     return [
-      { containerId: level.hint.sourceId, color: colors.amber },
-      { containerId: level.hint.targetId, color: colors.amber },
+      { containerId: level.hint.sourceId, color: colors.gold },
+      { containerId: level.hint.targetId, color: colors.gold },
     ];
   }
-  return tutorial?.highlight ? [{ containerId: tutorial.highlight, color: colors.cyan }] : [];
+  return tutorial?.highlight ? [{ containerId: tutorial.highlight, color: colors.gold }] : [];
 };
 
 export const GameScreen = () => {
@@ -105,7 +101,7 @@ export const GameScreen = () => {
         <View style={styles.topBar}>
           <IconButton icon="pause" label="Pause" onPress={game.openPause} />
           <View style={styles.title}>
-            <AppText variant="heading" align="center">
+            <AppText variant="title" align="center" style={styles.levelTitle} numberOfLines={1}>
               Level {level.level}
             </AppText>
             <AppText variant="caption" color={colors.textSecondary} align="center">
@@ -127,7 +123,7 @@ export const GameScreen = () => {
           />
         </View>
 
-        {tutorial ? <TutorialCoach message={tutorial.message} icon={tutorial.icon} /> : null}
+        {tutorial ? <TutorialCoach message={tutorial.message} /> : null}
         <GameActionBar />
       </SafeAreaView>
 
@@ -150,6 +146,7 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   title: { flex: 1 },
+  levelTitle: { fontSize: 24, lineHeight: 33, color: colors.textPrimary },
   boardWrap: {
     flex: 1,
     paddingHorizontal: spacing.lg,

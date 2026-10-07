@@ -1,28 +1,26 @@
-import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, View } from 'react-native';
 
-import { colors, radius } from '../../theme';
+import { colors } from '../../theme';
 import { AppText } from './AppText';
 
-/** Marks an option that plays a rewarded video. */
-export const AdBadge = ({ dark = false }: { dark?: boolean }) => (
-  <View style={[styles.badge, dark && styles.dark]}>
-    <Ionicons name="play" size={10} color={dark ? '#0B0F1A' : colors.textPrimary} />
-    <AppText variant="caption" color={dark ? '#0B0F1A' : colors.textPrimary}>
+/** A red rubber stamp marking an option that plays a rewarded video. */
+export const AdBadge = (_props: { dark?: boolean }) => (
+  <View style={styles.stamp}>
+    <AppText variant="caption" color={colors.stamp} style={styles.text}>
       AD
     </AppText>
   </View>
 );
 
 const styles = StyleSheet.create({
-  badge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-    paddingHorizontal: 6,
-    paddingVertical: 1,
-    borderRadius: radius.pill,
-    backgroundColor: 'rgba(167,139,250,0.35)',
+  stamp: {
+    paddingHorizontal: 5,
+    borderWidth: 1.6,
+    borderStyle: 'dashed',
+    borderColor: colors.stamp,
+    borderRadius: 2,
+    transform: [{ rotate: '-4deg' }],
+    backgroundColor: 'rgba(234,214,166,0.35)',
   },
-  dark: { backgroundColor: 'rgba(11,15,26,0.18)' },
+  text: { letterSpacing: 1 },
 });

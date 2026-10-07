@@ -25,7 +25,7 @@ const Bubble = ({ message }: { message: string }) => {
       style={[styles.toast, { top: insets.top + 64 }]}
       accessibilityLiveRegion="polite"
     >
-      <AppText variant="label" align="center">
+      <AppText variant="label" align="center" color={colors.ink}>
         {message}
       </AppText>
     </Animated.View>
@@ -45,9 +45,9 @@ const styles = StyleSheet.create({
     maxWidth: '86%',
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
-    borderRadius: radius.pill,
-    backgroundColor: colors.surfaceRaised,
-    borderWidth: StyleSheet.hairlineWidth * 2,
-    borderColor: colors.borderGlassStrong,
+    borderRadius: radius.sm,
+    backgroundColor: colors.parchment,
+    borderWidth: 1.5,
+    borderColor: colors.parchmentDark,
   },
 });

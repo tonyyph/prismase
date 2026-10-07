@@ -51,3 +51,4 @@ store-screenshots
 credentials/*
 !credentials/README.md
 .env.eas
+*.p8

@@ -1,9 +1,6 @@
-import {
-  Manrope_500Medium,
-  Manrope_700Bold,
-  Manrope_800ExtraBold,
-} from '@expo-google-fonts/manrope';
-import { Sora_600SemiBold, Sora_700Bold } from '@expo-google-fonts/sora';
+import { PirataOne_400Regular } from '@expo-google-fonts/pirata-one';
+import { Rye_400Regular } from '@expo-google-fonts/rye';
+import { Bitter_500Medium, Bitter_600SemiBold, Bitter_700Bold } from '@expo-google-fonts/bitter';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { type ReactNode, useEffect } from 'react';
@@ -20,11 +17,11 @@ SplashScreen.preventAutoHideAsync().catch(() => undefined);
 /** Loads fonts and saved state, wires sound/haptic feedback, then hides the splash. */
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [fontsLoaded, fontError] = useFonts({
-    Sora_600SemiBold,
-    Sora_700Bold,
-    Manrope_500Medium,
-    Manrope_700Bold,
-    Manrope_800ExtraBold,
+    Rye_400Regular,
+    PirataOne_400Regular,
+    Bitter_500Medium,
+    Bitter_600SemiBold,
+    Bitter_700Bold,
   });
   const boot = useGameStore((s) => s.boot);
   useSoundEffects();

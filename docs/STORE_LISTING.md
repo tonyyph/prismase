@@ -2,7 +2,7 @@
 
 ## Name
 
-Prismase: Color Sort Puzzle
+Prismase: Outlaw Sort Puzzle
 
 ## Subtitle (iOS, 30 chars)
 
@@ -10,36 +10,41 @@ Sort the spectrum
 
 ## Short description (Google Play, 80 chars)
 
-Sort glowing crystals by color in a calm, premium puzzle. Offline, no sign-in.
+Sort sheriff stars, horseshoes and doubloons in a calm frontier puzzle. Offline.
 
 ## Long description
 
-Light breaks into color. Your job is to put it back in order.
+High noon. The saloon's a mess, and every crate on the table holds the wrong loot.
 
-Prismase is a calm, beautifully crafted sorting puzzle. Tap a glass prism to lift its top
-crystal, tap another to set it down, and fill every prism with four of a kind. It takes five
-seconds to learn and plenty of clever moves to master.
+Prismase is a calm, beautifully crafted sorting puzzle set on the frontier, with a pinch of
+pirate. Tap a crate to lift its top concho, tap another to set it down, and fill every crate
+with four of a kind: sheriff stars, horseshoes, cowboy hats, anchors and more.
 
-• Hundreds of hand-tuned, always-solvable levels that grow from gentle to expert
-• Crystals with distinct cuts, so every color is easy to tell apart
-• Smooth animation, soft haptics and glassy sound design
-• Free undos every level, hints that point to a move that still works, and an extra prism
-when you need room to think
-• A daily coin gift
+• Hundreds of always-solvable levels that grow from greenhorn to outlaw
+• Twelve brass conchos, each with its own carved emblem, so every color is easy to tell apart
+• Wanted-poster rewards, a daily treasure chest, and doubloons to spend
+• Free undos every level, a lantern hint that points to a move that still works, and an
+extra crate when you need elbow room
+• Wood, banjo and whistle sound design, with gentle haptics
 • Play offline anywhere. No account, no timers, no pressure
-• Reduced-motion and sound/haptics settings
 
-Relax, focus, and sort the spectrum.
+Pull up a chair, partner, and sort the spectrum.
 
 ## Keywords (iOS, 100 chars)
 
-sort,color,puzzle,crystal,gem,relax,brain,logic,offline,casual,water,ball,match,calm,prism
+sort,color,puzzle,western,cowboy,pirate,saloon,relax,brain,logic,offline,casual,calm,ball
 
 ## What's new (1.0.0)
 
-Welcome to Prismase! Sort glowing crystals across hundreds of levels, with hints, undo and a
+Welcome to Prismase! Sort brass conchos across hundreds of levels, with hints, undo and a
 daily gift. We'd love to hear what you think.
 
 ## Category
 
 Games › Puzzle (secondary: Casual)
+
+## Naming note
+
+"High Noon" is used internally as the art direction only. It is also the name of a well-known
+skin line in a major game and of a classic film, so keep it out of the store name, subtitle and
+keywords.

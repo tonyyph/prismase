@@ -13,11 +13,11 @@ export const ConfirmResetModal = ({ onConfirm, onCancel }: Props) => (
       Reset progress?
     </AppText>
     <AppText color={colors.textSecondary} align="center" style={styles.body}>
-      Levels, coins and boosters return to the start. Settings are kept. This cannot be undone.
+      Levels, doubloons and boosters return to the start. Settings are kept. This cannot be undone.
     </AppText>
     <View style={styles.buttons}>
       <AppButton label="Cancel" onPress={onCancel} />
-      <AppButton icon="trash-outline" label="Reset everything" onPress={onConfirm} />
+      <AppButton icon="trash" label="Reset everything" onPress={onConfirm} />
     </View>
   </ModalShell>
 );

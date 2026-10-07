@@ -5,8 +5,8 @@
 export const TUBE = {
   padX: 0.16,
   gap: 0.05,
-  padTop: 0.3,
-  padBottom: 0.16,
+  padTop: 0.32,
+  padBottom: 0.22,
   /** Room above each tube for the lifted (selected) item. */
   lift: 1.05,
   hGap: 0.3,

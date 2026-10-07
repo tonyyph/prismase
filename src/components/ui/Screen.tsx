@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { spacing } from '../../theme';
+import { colors, spacing } from '../../theme';
 import { AppText } from './AppText';
 import { IconButton } from './IconButton';
 
@@ -20,11 +20,11 @@ export const Screen = ({ children, title, onBack, right, style }: Props) => (
     {title || onBack ? (
       <View style={styles.header}>
         {onBack ? (
-          <IconButton icon="chevron-back" label="Back" onPress={onBack} />
+          <IconButton icon="back" label="Back" onPress={onBack} />
         ) : (
           <View style={styles.spacer} />
         )}
-        <AppText variant="heading" style={styles.title} align="center" numberOfLines={1}>
+        <AppText variant="title" style={styles.title} align="center" numberOfLines={1}>
           {title}
         </AppText>
         {right ?? <View style={styles.spacer} />}
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.md,
     gap: spacing.md,
   },
-  title: { flex: 1 },
+  title: { flex: 1, fontSize: 24, lineHeight: 33, color: colors.textPrimary },
   spacer: { width: 44 },
   body: { flex: 1 },
 });

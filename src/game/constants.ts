@@ -1,4 +1,4 @@
-import type { PlayerProgress, PrismVariant, Settings } from './types';
+import type { PlayerProgress, Settings } from './types';
 
 export const CONTAINER_CAPACITY = 4;
 
@@ -12,68 +12,53 @@ export const MAX_EXTRA_PRISMS_PER_LEVEL = 1;
 
 export const HINT_HIGHLIGHT_MS = 1800;
 
+export type Emblem =
+  | 'star'
+  | 'horseshoe'
+  | 'hat'
+  | 'cactus'
+  | 'anchor'
+  | 'boot'
+  | 'jolly'
+  | 'longhorn'
+  | 'spade'
+  | 'compass'
+  | 'wheel'
+  | 'cylinder';
+
 export type PrismColor = {
   id: string;
   name: string;
+  /** Enamel colour of the concho face. */
   base: string;
-  light: string;
-  dark: string;
-  /** Shape varies so that neighbouring hues stay distinguishable for colour-blind players. */
-  variant: PrismVariant;
+  /** Every colour also carries its own carved emblem, so colour is never the only cue. */
+  icon: Emblem;
+  /** Light enamels take a dark emblem instead of a cream one. */
+  inkEmblem?: boolean;
+  pirate?: boolean;
 };
 
-/**
- * Ordered so that early levels (few colours) get the most distinct hues. The palette is the
- * product brief's twelve prism colours.
- */
+/** Twelve conchos, ordered so early levels (few colours) get the most distinct hues. */
 export const PRISM_COLORS: readonly PrismColor[] = [
-  { id: 'cyan', name: 'Cyan', base: '#22D3EE', light: '#A5F3FC', dark: '#0E7490', variant: 'gem' },
-  { id: 'pink', name: 'Pink', base: '#F472B6', light: '#FBCFE8', dark: '#BE185D', variant: 'orb' },
+  { id: 'crimson', name: 'Crimson star', base: '#b8322a', icon: 'star' },
+  { id: 'turquoise', name: 'Turquoise horseshoe', base: '#24897d', icon: 'horseshoe' },
+  { id: 'mustard', name: 'Mustard hat', base: '#d39a14', icon: 'hat', inkEmblem: true },
+  { id: 'sage', name: 'Sage cactus', base: '#5b8a34', icon: 'cactus' },
+  { id: 'denim', name: 'Denim anchor', base: '#2f5d9e', icon: 'anchor', pirate: true },
+  { id: 'rust', name: 'Rust boot', base: '#cf6420', icon: 'boot' },
+  { id: 'plum', name: 'Plum skull and bones', base: '#6e3b6e', icon: 'jolly', pirate: true },
+  { id: 'saddle', name: 'Saddle longhorn', base: '#7a4a2a', icon: 'longhorn' },
+  { id: 'coal', name: 'Coal spade', base: '#2e2b2c', icon: 'spade' },
   {
-    id: 'amber',
-    name: 'Amber',
-    base: '#FBBF24',
-    light: '#FEF3C7',
-    dark: '#B45309',
-    variant: 'gem',
+    id: 'bone',
+    name: 'Bone compass',
+    base: '#e3d3ae',
+    icon: 'compass',
+    inkEmblem: true,
+    pirate: true,
   },
-  {
-    id: 'violet',
-    name: 'Violet',
-    base: '#A78BFA',
-    light: '#DDD6FE',
-    dark: '#6D28D9',
-    variant: 'shard',
-  },
-  {
-    id: 'emerald',
-    name: 'Emerald',
-    base: '#34D399',
-    light: '#A7F3D0',
-    dark: '#047857',
-    variant: 'shard',
-  },
-  { id: 'blue', name: 'Blue', base: '#3B82F6', light: '#BFDBFE', dark: '#1D4ED8', variant: 'orb' },
-  {
-    id: 'orange',
-    name: 'Orange',
-    base: '#FB923C',
-    light: '#FED7AA',
-    dark: '#C2410C',
-    variant: 'orb',
-  },
-  { id: 'red', name: 'Red', base: '#EF4444', light: '#FECACA', dark: '#991B1B', variant: 'shard' },
-  { id: 'lime', name: 'Lime', base: '#A3E635', light: '#ECFCCB', dark: '#4D7C0F', variant: 'orb' },
-  { id: 'mint', name: 'Mint', base: '#5EEAD4', light: '#CCFBF1', dark: '#0F766E', variant: 'orb' },
-  {
-    id: 'lavender',
-    name: 'Lavender',
-    base: '#C4B5FD',
-    light: '#EDE9FE',
-    dark: '#7C3AED',
-    variant: 'gem',
-  },
-  { id: 'rose', name: 'Rose', base: '#FDA4AF', light: '#FFE4E6', dark: '#BE123C', variant: 'gem' },
+  { id: 'rose', name: 'Rose wagon wheel', base: '#c4506a', icon: 'wheel' },
+  { id: 'steel', name: 'Steel cylinder', base: '#66788a', icon: 'cylinder' },
 ];
 
 export const MAX_COLORS = PRISM_COLORS.length;

@@ -1,8 +1,8 @@
-import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { memo, useCallback, useMemo } from 'react';
 import { FlatList, type ListRenderItem, StyleSheet, View, useWindowDimensions } from 'react-native';
 
+import { WesternIcon } from '../components/art/WesternIcon';
 import { AppText } from '../components/ui/AppText';
 import { CoinPill } from '../components/ui/CoinPill';
 import { ScalePressable } from '../components/ui/Pressable';
@@ -13,17 +13,17 @@ import { type LevelCardState, levelCardState } from '../game/selectors';
 import type { LevelDifficulty } from '../game/types';
 import { usePrismaseGame } from '../hooks/usePrismaseGame';
 import { useGameStore } from '../store/gameStore';
-import { colors, radius, spacing } from '../theme';
+import { brickGradient, colors, radius, spacing, woodGradient } from '../theme';
 
 const COLUMNS = 5;
 const GAP = spacing.sm + 2;
 const PAD = spacing.lg;
 
 const DIFFICULTY_COLOR: Record<LevelDifficulty, string> = {
-  easy: colors.emerald,
-  normal: colors.cyan,
-  hard: colors.violet,
-  expert: colors.pink,
+  easy: '#7fa64a',
+  normal: '#2a9d8f',
+  hard: '#cf6420',
+  expert: '#c0392b',
 };
 
 type CardProps = {
@@ -33,50 +33,35 @@ type CardProps = {
   onPress: (level: number) => void;
 };
 
+/** Level cards are wooden tiles; the next level to play is a red painted plank. */
 const LevelCard = memo(function LevelCard({ level, state, size, onPress }: CardProps) {
   const locked = state === 'locked';
+  const current = state === 'current';
   const accent = DIFFICULTY_COLOR[getLevelConfig(level).difficulty];
-  const body = (
-    <>
-      {locked ? (
-        <Ionicons name="lock-closed" size={16} color={colors.textMuted} />
-      ) : (
-        <AppText variant="number" color={state === 'current' ? '#0B0F1A' : colors.textPrimary}>
-          {level}
-        </AppText>
-      )}
-      {state === 'completed' ? (
-        <Ionicons name="checkmark" size={12} color={accent} style={styles.check} />
-      ) : null}
-      {!locked && state !== 'current' ? (
-        <View style={[styles.dot, { backgroundColor: accent }]} />
-      ) : null}
-    </>
-  );
   return (
     <ScalePressable
       disabled={locked}
       onPress={() => onPress(level)}
       accessibilityRole="button"
       accessibilityLabel={`Level ${level}, ${state}`}
-      style={[
-        styles.card,
-        { width: size, height: size },
-        state === 'completed' && { borderColor: `${accent}55` },
-        locked && styles.locked,
-      ]}
+      style={[styles.card, { width: size, height: size }, locked && styles.locked]}
     >
-      {state === 'current' ? (
-        <LinearGradient
-          colors={['#67E8F9', '#C4B5FD', '#F9A8D4']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={[styles.fill, { borderRadius: radius.md }]}
-        >
-          {body}
-        </LinearGradient>
+      {locked ? (
+        <View style={[styles.face, styles.lockedFace]}>
+          <WesternIcon name="lock" size={18} color={colors.textMuted} />
+        </View>
       ) : (
-        body
+        <LinearGradient colors={current ? brickGradient : woodGradient} style={styles.face}>
+          <AppText variant="title" style={styles.number}>
+            {level}
+          </AppText>
+          {state === 'completed' ? (
+            <View style={styles.check}>
+              <WesternIcon name="star" size={13} color={colors.brassLight} />
+            </View>
+          ) : null}
+          <View style={[styles.dot, { backgroundColor: accent }]} />
+        </LinearGradient>
       )}
     </ScalePressable>
   );
@@ -121,17 +106,19 @@ export const LevelSelectScreen = () => {
   return (
     <Screen title="Levels" onBack={game.goBack} right={<CoinPill />}>
       <View style={styles.summary}>
-        <AppText variant="caption" color={colors.textSecondary}>
-          {completed} CLEARED · {progress.unlockedLevel} UNLOCKED
-        </AppText>
+        <View style={styles.summaryBoard}>
+          <AppText variant="caption" color={colors.ink}>
+            {completed} BOUNTIES · {progress.unlockedLevel} UNLOCKED
+          </AppText>
+        </View>
         <View style={styles.legend}>
           {(Object.keys(DIFFICULTY_COLOR) as LevelDifficulty[]).map((d) => (
             <View key={d} style={styles.legendItem}>
               <View
                 style={[styles.dot, styles.legendDot, { backgroundColor: DIFFICULTY_COLOR[d] }]}
               />
-              <AppText variant="caption" color={colors.textSecondary}>
-                {d}
+              <AppText variant="caption" color={colors.textPrimary}>
+                {d.toUpperCase()}
               </AppText>
             </View>
           ))}
@@ -163,19 +150,27 @@ const styles = StyleSheet.create({
   legend: { flexDirection: 'row', gap: spacing.md },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   legendDot: { position: 'relative', bottom: 0 },
+  summaryBoard: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: 4,
+    backgroundColor: colors.parchment,
+  },
   list: { paddingHorizontal: PAD, paddingBottom: spacing.xxl },
   listView: { width: '100%', maxWidth: 520, alignSelf: 'center' },
   row: { flexDirection: 'row', gap: GAP },
-  card: {
-    borderRadius: radius.md,
+  card: { borderRadius: radius.sm + 2, backgroundColor: '#2e180b', paddingBottom: 3 },
+  face: {
+    flex: 1,
+    borderRadius: radius.sm + 2,
+    borderWidth: 1.5,
+    borderColor: '#3a1f0e',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: colors.surfaceGlass,
-    borderWidth: StyleSheet.hairlineWidth * 2,
-    borderColor: colors.borderGlass,
   },
-  fill: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' },
-  locked: { backgroundColor: 'rgba(255,255,255,0.03)', borderColor: 'rgba(255,255,255,0.06)' },
-  check: { position: 'absolute', top: 5, right: 6 },
-  dot: { position: 'absolute', bottom: 7, width: 5, height: 5, borderRadius: 3 },
+  lockedFace: { backgroundColor: '#3a2214', borderColor: '#2b170c' },
+  locked: { opacity: 0.85 },
+  number: { fontSize: 22, lineHeight: 31 },
+  check: { position: 'absolute', top: 4, right: 5 },
+  dot: { position: 'absolute', bottom: 6, width: 6, height: 6, borderRadius: 3 },
 });

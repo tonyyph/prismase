@@ -25,43 +25,44 @@ export const SettingsScreen = () => {
       <ScrollView contentContainerStyle={styles.content}>
         <GlassPanel style={styles.panel}>
           <ToggleRow
-            icon="musical-notes-outline"
+            icon="sound"
             label="Sound"
             value={settings.soundEnabled}
             onChange={(soundEnabled) => updateSettings({ soundEnabled })}
           />
           <ToggleRow
-            icon="phone-portrait-outline"
+            icon="haptics"
             label="Haptics"
             value={settings.hapticsEnabled}
             onChange={(hapticsEnabled) => updateSettings({ hapticsEnabled })}
           />
           <ToggleRow
-            icon="accessibility-outline"
+            icon="motion"
             label="Reduced motion"
-            description="Skip item flights, shimmer and confetti"
+            description="Skip flying pieces, glints and falling doubloons"
             value={settings.reducedMotion}
             onChange={(reducedMotion) => updateSettings({ reducedMotion })}
           />
           <ToggleRow
-            icon="bulb-outline"
+            icon="hint"
             label="Animated hints"
-            description="Pulse the prisms a hint points at"
+            description="Pulse the crates a hint points at"
             value={settings.hintAnimation}
             onChange={(hintAnimation) => updateSettings({ hintAnimation })}
           />
         </GlassPanel>
 
         <View style={styles.section}>
-          <AppButton
-            icon="trash-outline"
-            label="Reset progress"
-            onPress={() => setConfirming(true)}
-          />
+          <AppButton icon="trash" label="Reset progress" onPress={() => setConfirming(true)} />
         </View>
 
-        <AppText variant="caption" color={colors.textMuted} align="center" style={styles.footer}>
-          PRISMASE {Constants.expoConfig?.version ?? '1.0.0'} · OFFLINE · NO ACCOUNT
+        <AppText
+          variant="caption"
+          color={colors.textSecondary}
+          align="center"
+          style={styles.footer}
+        >
+          PRISMASE {Constants.expoConfig?.version ?? '1.0.0'} · OFFLINE · NO ACCOUNT NEEDED
         </AppText>
       </ScrollView>
 
