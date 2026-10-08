@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import Animated, { FadeIn, FadeOut, ZoomIn } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown, FadeOut } from 'react-native-reanimated';
 
 import { useReducedMotion } from '../../hooks/usePersistedSettings';
-import { colors, spacing } from '../../theme';
+import { colors, motion, spacing } from '../../theme';
 import { GlassPanel } from '../ui/GlassPanel';
 
 type Props = {
@@ -29,8 +29,8 @@ export const ModalShell = ({
   const reducedMotion = useReducedMotion();
   return (
     <Animated.View
-      entering={FadeIn.duration(reducedMotion ? 0 : 220).delay(delay)}
-      exiting={FadeOut.duration(160)}
+      entering={FadeIn.duration(reducedMotion ? 0 : motion.duration.fade).delay(delay)}
+      exiting={FadeOut.duration(200)}
       style={[StyleSheet.absoluteFill, styles.scrim]}
       accessibilityViewIsModal
     >
@@ -46,8 +46,8 @@ export const ModalShell = ({
           entering={
             reducedMotion
               ? undefined
-              : ZoomIn.springify()
-                  .damping(16)
+              : FadeInDown.duration(motion.duration.modal)
+                  .easing(motion.settle)
                   .delay(delay + 40)
           }
           style={styles.panelWrap}

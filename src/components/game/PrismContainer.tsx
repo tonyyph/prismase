@@ -3,6 +3,7 @@ import { memo, useEffect } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
+  FadeInDown,
   useAnimatedStyle,
   useSharedValue,
   withSequence,
@@ -12,7 +13,7 @@ import Animated, {
 
 import { getPrismColor } from '../../game/constants';
 import type { ContainerState } from '../../game/types';
-import { colors } from '../../theme';
+import { colors, motion } from '../../theme';
 import { CrateArt, CrateMedallion } from '../art/CrateArt';
 import { type BoardLayout, type Rect, liftCenter, slotCenter } from './boardLayout';
 import { PrismItem } from './PrismItem';
@@ -63,43 +64,38 @@ export const PrismContainer = memo(function PrismContainer({
     slotCenter(layout, container.capacity, Math.max(0, topIndex)).y - liftCenter(layout).y;
 
   const shake = useSharedValue(0);
-  const scale = useSharedValue(1);
   const lifted = useSharedValue(0);
   const shimmer = useSharedValue(-1);
 
   useEffect(() => {
     if (shakeSeq === undefined || reducedMotion) return;
-    const d = slot * 0.14;
+    // One small nudge, not a wobble: enough to say "no" without shaking the board.
+    const d = slot * 0.07;
     shake.set(
       withSequence(
-        withTiming(-d, { duration: 45 }),
-        withTiming(d, { duration: 70 }),
-        withTiming(-d * 0.6, { duration: 60 }),
-        withTiming(d * 0.4, { duration: 50 }),
-        withTiming(0, { duration: 45 }),
+        withTiming(-d, { duration: 80, easing: Easing.inOut(Easing.sin) }),
+        withTiming(d, { duration: 110, easing: Easing.inOut(Easing.sin) }),
+        withTiming(0, { duration: 120, easing: motion.settle }),
       ),
     );
   }, [shakeSeq, reducedMotion, shake, slot]);
 
   useEffect(() => {
-    const spring = { damping: 15, stiffness: 260 };
     if (reducedMotion) {
-      scale.set(1);
       lifted.set(selected ? 1 : 0);
       return;
     }
-    scale.set(withSpring(selected ? 1.03 : 1, spring));
-    lifted.set(withSpring(selected ? 1 : 0, spring));
-  }, [selected, reducedMotion, scale, lifted]);
+    lifted.set(withSpring(selected ? 1 : 0, motion.spring.lift));
+  }, [selected, reducedMotion, lifted]);
 
   useEffect(() => {
     if (!complete || reducedMotion) return;
     shimmer.set(-1);
-    shimmer.set(withTiming(1, { duration: 900, easing: Easing.out(Easing.quad) }));
+    shimmer.set(withTiming(1, { duration: 1100, easing: motion.travel }));
   }, [complete, reducedMotion, shimmer]);
 
   const containerStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: shake.value }, { scale: scale.value }],
+    transform: [{ translateX: shake.value }],
   }));
   const liftStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: -lift * lifted.value }],
@@ -117,97 +113,112 @@ export const PrismContainer = memo(function PrismContainer({
     : 'empty';
 
   return (
+    // Outer view owns the entrance (crates arrive one after another when a level opens);
+    // inner view owns the shake, so the two animations never fight over `transform`.
     <Animated.View
+      entering={
+        reducedMotion
+          ? undefined
+          : FadeInDown.duration(420)
+              .delay(Math.min(index, 12) * 40)
+              .easing(motion.settle)
+      }
       style={[
         styles.container,
         { left: rect.x, top: rect.y, width: rect.width, height: rect.height },
-        containerStyle,
       ]}
     >
-      <Pressable
-        onPress={() => onPress(container.id)}
-        hitSlop={{ left: gapX / 2, right: gapX / 2, top: 4, bottom: 8 }}
-        style={StyleSheet.absoluteFill}
-        accessibilityRole="button"
-        accessibilityLabel={`Prism ${index + 1}${complete ? ', complete' : ''}: ${label}`}
-        accessibilityState={{ selected }}
-      >
-        {selected ? (
-          <View
-            pointerEvents="none"
-            style={[
-              styles.selection,
-              {
-                top: liftSpace - 4,
-                width: tubeWidth + 8,
-                height: tubeHeight + 8,
-                borderRadius: tubeWidth * 0.14,
-              },
-            ]}
-          />
-        ) : null}
-        <View style={[styles.crate, { top: liftSpace - 2 }]}>
-          <CrateArt
-            width={tubeWidth}
-            height={tubeHeight}
-            seed={index * 31 + 7}
-            complete={color?.base}
-            extra={container.isExtra}
-          />
-        </View>
-        {color ? (
-          <View
-            pointerEvents="none"
-            style={[
-              styles.medallion,
-              { top: liftSpace - medallion * 0.78, left: tubeWidth / 2 - medallion / 2 },
-            ]}
-          >
-            <CrateMedallion size={medallion} color={color.base} />
+      <Animated.View style={[StyleSheet.absoluteFill, containerStyle]}>
+        <Pressable
+          onPress={() => onPress(container.id)}
+          hitSlop={{ left: gapX / 2, right: gapX / 2, top: 4, bottom: 8 }}
+          style={StyleSheet.absoluteFill}
+          accessibilityRole="button"
+          accessibilityLabel={`Prism ${index + 1}${complete ? ', complete' : ''}: ${label}`}
+          accessibilityState={{ selected }}
+        >
+          {selected ? (
+            <View
+              pointerEvents="none"
+              style={[
+                styles.selection,
+                {
+                  top: liftSpace - 4,
+                  width: tubeWidth + 8,
+                  height: tubeHeight + 8,
+                  borderRadius: tubeWidth * 0.14,
+                },
+              ]}
+            />
+          ) : null}
+          <View style={[styles.crate, { top: liftSpace - 2 }]}>
+            <CrateArt
+              width={tubeWidth}
+              height={tubeHeight}
+              seed={index * 31 + 7}
+              complete={color?.base}
+              extra={container.isExtra}
+            />
           </View>
-        ) : null}
-
-        {container.items.slice(0, -1).map((item, i) =>
-          item.id === hiddenItemId ? null : (
-            <View key={item.id} style={[styles.item, itemFrame(i)]}>
-              <PrismItem colorId={item.colorId} size={itemSize} />
-            </View>
-          ),
-        )}
-        {topItem ? (
-          // The top item lives in one persistent animated view, so the lift style is never
-          // detached from a view mid-animation (which would leave a stale transform behind).
-          <Animated.View key="top" style={[styles.item, itemFrame(topIndex), liftStyle]}>
-            {topItem.id === hiddenItemId ? null : (
-              <PrismItem colorId={topItem.colorId} size={itemSize} />
-            )}
-          </Animated.View>
-        ) : null}
-
-        {complete && !reducedMotion ? (
-          <View
-            pointerEvents="none"
-            style={[
-              styles.shimmerClip,
-              {
-                top: liftSpace,
-                width: tubeWidth,
-                height: tubeHeight,
-                borderRadius: tubeWidth * 0.1,
-              },
-            ]}
-          >
+          {color ? (
             <Animated.View
-              style={[styles.shimmer, { width: tubeWidth * 2, left: -tubeWidth / 2 }, shimmerStyle]}
+              entering={reducedMotion ? undefined : FadeInDown.duration(480).easing(motion.settle)}
+              pointerEvents="none"
+              style={[
+                styles.medallion,
+                { top: liftSpace - medallion * 0.78, left: tubeWidth / 2 - medallion / 2 },
+              ]}
             >
-              <LinearGradient
-                colors={['rgba(255,236,170,0)', 'rgba(255,236,170,0.5)', 'rgba(255,236,170,0)']}
-                style={StyleSheet.absoluteFill}
-              />
+              <CrateMedallion size={medallion} color={color.base} />
             </Animated.View>
-          </View>
-        ) : null}
-      </Pressable>
+          ) : null}
+
+          {container.items.slice(0, -1).map((item, i) =>
+            item.id === hiddenItemId ? null : (
+              <View key={item.id} style={[styles.item, itemFrame(i)]}>
+                <PrismItem colorId={item.colorId} size={itemSize} />
+              </View>
+            ),
+          )}
+          {topItem ? (
+            // The top item lives in one persistent animated view, so the lift style is never
+            // detached from a view mid-animation (which would leave a stale transform behind).
+            <Animated.View key="top" style={[styles.item, itemFrame(topIndex), liftStyle]}>
+              {topItem.id === hiddenItemId ? null : (
+                <PrismItem colorId={topItem.colorId} size={itemSize} />
+              )}
+            </Animated.View>
+          ) : null}
+
+          {complete && !reducedMotion ? (
+            <View
+              pointerEvents="none"
+              style={[
+                styles.shimmerClip,
+                {
+                  top: liftSpace,
+                  width: tubeWidth,
+                  height: tubeHeight,
+                  borderRadius: tubeWidth * 0.1,
+                },
+              ]}
+            >
+              <Animated.View
+                style={[
+                  styles.shimmer,
+                  { width: tubeWidth * 2, left: -tubeWidth / 2 },
+                  shimmerStyle,
+                ]}
+              >
+                <LinearGradient
+                  colors={['rgba(255,236,170,0)', 'rgba(255,236,170,0.5)', 'rgba(255,236,170,0)']}
+                  style={StyleSheet.absoluteFill}
+                />
+              </Animated.View>
+            </View>
+          ) : null}
+        </Pressable>
+      </Animated.View>
     </Animated.View>
   );
 });

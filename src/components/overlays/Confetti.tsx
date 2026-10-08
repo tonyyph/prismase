@@ -59,13 +59,13 @@ export const Confetti = memo(function Confetti({ seed }: { seed: string }) {
   const { width, height } = useWindowDimensions();
   const pieces = useMemo(() => {
     const random = createRandom(seed);
-    return Array.from({ length: 28 }, (): Piece => ({
+    return Array.from({ length: 16 }, (): Piece => ({
       x: random() * width,
       drift: (random() - 0.5) * 120,
       delay: random() * 400,
       size: 6 + random() * 7,
       color: SCRAPS[Math.floor(random() * SCRAPS.length)],
-      spin: (random() - 0.5) * 720,
+      spin: (random() - 0.5) * 240,
       round: random() > 0.45,
     }));
   }, [seed, width]);

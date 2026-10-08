@@ -113,6 +113,7 @@ export const GameScreen = () => {
 
         <View style={styles.boardWrap}>
           <PrismBoard
+            key={`${level.level}-${level.startedAt}`}
             containers={level.containers}
             selectedId={level.selectedContainerId}
             lastEvent={level.lastEvent}

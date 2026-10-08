@@ -1,44 +1,28 @@
-import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSequence,
-  withSpring,
-} from 'react-native-reanimated';
 
 import { useReducedMotion } from '../../hooks/usePersistedSettings';
+import { useRollingNumber } from '../../hooks/useRollingNumber';
 import { useGameStore } from '../../store/gameStore';
 import { radius, spacing } from '../../theme';
 import { AppText } from './AppText';
 import { CoinIcon } from './CoinIcon';
 
-/** Coin balance that pops whenever coins are earned. */
+/** Doubloon balance in a stitched leather pouch. Gains and spends are counted out, not jumped. */
 export const CoinPill = () => {
   const coins = useGameStore((s) => s.progress.coins);
-  const pulse = useGameStore((s) => s.coinPulse);
   const reducedMotion = useReducedMotion();
-  const scale = useSharedValue(1);
-
-  useEffect(() => {
-    if (pulse === 0 || reducedMotion) return;
-    scale.set(withSequence(withSpring(1.18, { stiffness: 500 }), withSpring(1, { damping: 12 })));
-  }, [pulse, reducedMotion, scale]);
-
-  const animated = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+  const shown = useRollingNumber(coins, !reducedMotion);
 
   return (
-    <Animated.View
-      style={[styles.pill, animated]}
-      accessible
-      accessibilityLabel={`${coins} doubloons`}
-    >
+    <View style={styles.pill} accessible accessibilityLabel={`${coins} doubloons`}>
       <View pointerEvents="none" style={styles.stitch} />
       <CoinIcon size={22} />
       <View>
-        <AppText variant="number">{coins}</AppText>
+        <AppText variant="number" style={styles.count}>
+          {shown}
+        </AppText>
       </View>
-    </Animated.View>
+    </View>
   );
 };
 
@@ -55,6 +39,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: '#3e1f10',
   },
+  count: { fontVariant: ['tabular-nums'] },
   stitch: {
     ...StyleSheet.absoluteFill,
     margin: 4,

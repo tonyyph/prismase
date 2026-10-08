@@ -1,16 +1,5 @@
-import { useEffect } from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
-import Animated, {
-  Easing,
-  FadeIn,
-  FadeInDown,
-  ZoomIn,
-  cancelAnimation,
-  useAnimatedStyle,
-  useSharedValue,
-  withRepeat,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 
 import { WesternIcon } from '../components/art/WesternIcon';
 import { AppButton } from '../components/ui/AppButton';
@@ -26,31 +15,16 @@ import { Ribbon, Wordmark } from '../components/ui/Wordmark';
 import { REWARDS } from '../game/economy';
 import { getLevelConfig } from '../game/levelConfig';
 import { canClaimDaily } from '../game/progress';
-import { useReducedMotion } from '../hooks/usePersistedSettings';
 import { usePrismaseGame } from '../hooks/usePrismaseGame';
 import { useGameStore } from '../store/gameStore';
-import { colors, spacing } from '../theme';
+import { colors, motion, spacing } from '../theme';
 
-/** The outlaw hangs just under the noon sun and sways a little, like a sign in hot wind. */
-const HeroMark = ({ size }: { size: number }) => {
-  const reducedMotion = useReducedMotion();
-  const t = useSharedValue(0);
-  useEffect(() => {
-    if (reducedMotion) return undefined;
-    t.set(
-      withRepeat(withTiming(1, { duration: 3400, easing: Easing.inOut(Easing.sin) }), -1, true),
-    );
-    return () => cancelAnimation(t);
-  }, [t, reducedMotion]);
-  const style = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${(t.value - 0.5) * 6}deg` }],
-  }));
-  return (
-    <Animated.View entering={ZoomIn.springify().damping(12)} style={style}>
-      <LogoMark size={size} />
-    </Animated.View>
-  );
-};
+/** The outlaw mark under the noon sun; it settles into place once and then holds still. */
+const HeroMark = ({ size }: { size: number }) => (
+  <Animated.View entering={FadeInDown.duration(700).easing(motion.settle)}>
+    <LogoMark size={size} />
+  </Animated.View>
+);
 
 export const MainMenuScreen = () => {
   const game = usePrismaseGame();
@@ -105,7 +79,10 @@ export const MainMenuScreen = () => {
 
         <View style={styles.spacer} />
 
-        <Animated.View entering={FadeInDown.duration(500).delay(250)} style={styles.actions}>
+        <Animated.View
+          entering={FadeInDown.duration(600).delay(250).easing(motion.settle)}
+          style={styles.actions}
+        >
           <View style={styles.levelTag}>
             <AppText variant="caption" color={colors.textSecondary}>
               LEVEL {current} · {difficulty.toUpperCase()}

@@ -11,6 +11,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { motion } from '../../theme';
 import type { BoardLayout, Rect } from './boardLayout';
 
 export type Highlight = { containerId: string; color: string };
@@ -40,39 +41,41 @@ const Ring = ({
       return undefined;
     }
     glow.set(
-      withRepeat(withTiming(1, { duration: 520, easing: Easing.inOut(Easing.sin) }), -1, true),
+      withRepeat(withTiming(1, { duration: 900, easing: Easing.inOut(Easing.sin) }), -1, true),
     );
     return () => cancelAnimation(glow);
   }, [pulse, glow]);
 
   const style = useAnimatedStyle(() => ({
-    opacity: 0.35 + glow.value * 0.65,
-    transform: [{ scale: 1 + glow.value * 0.04 }],
+    opacity: 0.55 + glow.value * 0.45,
   }));
 
   const pad = 5;
+  // Entrance and exit live on the wrapper, the glow on the inner ring, so the two
+  // animations never write the same property.
   return (
     <Animated.View
-      entering={FadeIn.duration(160)}
-      exiting={FadeOut.duration(220)}
+      entering={FadeIn.duration(motion.duration.fade).easing(motion.settle)}
+      exiting={FadeOut.duration(260)}
       pointerEvents="none"
       style={[
-        styles.ring,
+        styles.frame,
         {
           left: rect.x - pad,
           top: rect.y + layout.liftSpace - pad,
           width: layout.tubeWidth + pad * 2,
           height: layout.tubeHeight + pad * 2,
-          borderColor: color,
-          shadowColor: color,
-          borderTopLeftRadius: layout.tubeWidth * 0.3,
-          borderTopRightRadius: layout.tubeWidth * 0.3,
-          borderBottomLeftRadius: layout.tubeWidth,
-          borderBottomRightRadius: layout.tubeWidth,
         },
-        style,
       ]}
-    />
+    >
+      <Animated.View
+        style={[
+          styles.ring,
+          { borderColor: color, shadowColor: color, borderRadius: layout.tubeWidth * 0.16 },
+          style,
+        ]}
+      />
+    </Animated.View>
   );
 };
 
@@ -89,8 +92,9 @@ export const HintOverlay = ({ highlights, rectFor, layout, pulse }: Props) => (
 );
 
 const styles = StyleSheet.create({
+  frame: { position: 'absolute' },
   ring: {
-    position: 'absolute',
+    ...StyleSheet.absoluteFill,
     borderWidth: 2.5,
     shadowOpacity: 0.9,
     shadowRadius: 12,

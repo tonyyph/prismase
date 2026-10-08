@@ -10,6 +10,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-na
 
 import { haptic } from '../../hooks/useHaptics';
 import { useReducedMotion } from '../../hooks/usePersistedSettings';
+import { motion } from '../../theme';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -21,11 +22,11 @@ type Props = Omit<PressableProps, 'style' | 'children'> & {
   hapticOnPress?: boolean;
 };
 
-/** Pressable with a spring scale and a light haptic, used by every button. */
+/** Pressable with a slight press-in and a light haptic, used by every button. */
 export const ScalePressable = ({
   style,
   children,
-  pressScale = 0.96,
+  pressScale = 0.97,
   hapticOnPress = true,
   onPressIn,
   onPressOut,
@@ -43,11 +44,11 @@ export const ScalePressable = ({
       style={[style, animated, disabled && styles.disabled]}
       disabled={disabled}
       onPressIn={(e) => {
-        if (!reducedMotion) scale.set(withSpring(pressScale, { damping: 18, stiffness: 420 }));
+        if (!reducedMotion) scale.set(withSpring(pressScale, motion.spring.press));
         onPressIn?.(e);
       }}
       onPressOut={(e) => {
-        scale.set(withSpring(1, { damping: 14, stiffness: 320 }));
+        scale.set(withSpring(1, motion.spring.release));
         onPressOut?.(e);
       }}
       onPress={(e) => {

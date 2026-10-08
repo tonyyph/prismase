@@ -23,7 +23,6 @@ export const BootScreen = () => {
   }, [pulse]);
   const style = useAnimatedStyle(() => ({
     opacity: 0.7 + pulse.value * 0.3,
-    transform: [{ scale: 0.96 + pulse.value * 0.04 }],
   }));
   return (
     <View style={styles.root} accessibilityLabel="Loading Prismase">

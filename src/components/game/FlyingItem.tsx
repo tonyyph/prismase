@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
-  Easing,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
 
+import { motion } from '../../theme';
 import { PrismItem } from './PrismItem';
 
 type Point = { x: number; y: number };
@@ -24,12 +24,12 @@ type Props = {
 export const FlyingItem = ({ colorId, size, from, to, onDone }: Props) => {
   const t = useSharedValue(0);
   const distance = Math.hypot(to.x - from.x, to.y - from.y);
-  const arc = size * 0.5 + distance * 0.12;
-  const duration = Math.min(320, 190 + distance * 0.25);
+  const arc = size * 0.3 + distance * 0.06;
+  const duration = Math.min(380, 240 + distance * 0.3);
 
   useEffect(() => {
     t.set(
-      withTiming(1, { duration, easing: Easing.inOut(Easing.cubic) }, (finished) => {
+      withTiming(1, { duration, easing: motion.travel }, (finished) => {
         if (finished) runOnJS(onDone)();
       }),
     );
@@ -40,11 +40,7 @@ export const FlyingItem = ({ colorId, size, from, to, onDone }: Props) => {
     const x = from.x + (to.x - from.x) * p;
     const y = from.y + (to.y - from.y) * p - Math.sin(Math.PI * p) * arc;
     return {
-      transform: [
-        { translateX: x - size / 2 },
-        { translateY: y - size / 2 },
-        { scale: 1 + 0.08 * Math.sin(Math.PI * p) },
-      ],
+      transform: [{ translateX: x - size / 2 }, { translateY: y - size / 2 }],
     };
   });
 

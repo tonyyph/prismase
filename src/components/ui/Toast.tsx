@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import Animated, { FadeInUp, FadeOutUp } from 'react-native-reanimated';
+import Animated, { FadeInUp, FadeOut } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useGameStore } from '../../store/gameStore';
-import { colors, radius, spacing } from '../../theme';
+import { colors, motion, radius, spacing } from '../../theme';
 import { AppText } from './AppText';
 
 const Bubble = ({ message }: { message: string }) => {
@@ -19,8 +19,8 @@ const Bubble = ({ message }: { message: string }) => {
   if (!visible) return null;
   return (
     <Animated.View
-      entering={FadeInUp.duration(200)}
-      exiting={FadeOutUp.duration(200)}
+      entering={FadeInUp.duration(320).easing(motion.settle)}
+      exiting={FadeOut.duration(220)}
       pointerEvents="none"
       style={[styles.toast, { top: insets.top + 64 }]}
       accessibilityLiveRegion="polite"

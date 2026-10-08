@@ -10,6 +10,7 @@ import { LevelSelectScreen } from '../screens/LevelSelectScreen';
 import { MainMenuScreen } from '../screens/MainMenuScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { useGameStore } from '../store/gameStore';
+import { motion } from '../theme';
 
 /**
  * A tiny state-driven navigator: the store's status decides the screen. Pause and level
@@ -54,7 +55,9 @@ export const AppNavigator = () => {
     <View style={styles.root}>
       <Animated.View
         key={key}
-        entering={reducedMotion ? undefined : FadeIn.duration(220)}
+        entering={
+          reducedMotion ? undefined : FadeIn.duration(motion.duration.screen).easing(motion.settle)
+        }
         style={styles.root}
       >
         {node}
