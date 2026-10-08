@@ -32,11 +32,13 @@ it.each(PRISM_COLORS.map((c) => [c.name, c] as const))(
   },
 );
 
-it('renders every outlaw mark variant as a complete SVG document', () => {
-  for (const kind of ['icon', 'figure', 'background', 'mono'] as const) {
-    const svg = outlawMarkSvg(kind);
-    expect(svg.startsWith('<svg')).toBe(true);
-    expect(svg.endsWith('</svg>')).toBe(true);
-  }
-  expect(outlawMarkSvg('mono')).toContain('mask="url(#cut)"');
+it('composes the icon backdrop with and without the figure', () => {
+  const plain = outlawMarkSvg();
+  expect(plain.startsWith('<svg')).toBe(true);
+  expect(plain).not.toContain('<image');
+  const withFigure = outlawMarkSvg({ figureHref: 'data:image/png;base64,AAAA', scale: 0.8 });
+  expect(withFigure).toContain(
+    '<image href="data:image/png;base64,AAAA" x="10" y="10" width="80" height="80"/>',
+  );
+  expect(outlawMarkSvg({ backdrop: false, figureHref: 'x' })).not.toContain('sunburst');
 });

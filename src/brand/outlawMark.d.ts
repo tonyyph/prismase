@@ -1,5 +1,7 @@
-export type OutlawMarkKind = 'icon' | 'figure' | 'background' | 'mono';
-export function outlawMarkSvg(
-  kind?: OutlawMarkKind,
-  options?: { size?: number; inset?: number },
-): string;
+export function outlawMarkSvg(options?: {
+  backdrop?: boolean;
+  figureHref?: string;
+  scale?: number;
+  dy?: number;
+  size?: number;
+}): string;

@@ -41,13 +41,13 @@ export const MainMenuScreen = () => {
 
   return (
     <View style={styles.root}>
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
+      {/* <View style={StyleSheet.absoluteFill} pointerEvents="none">
         <View style={[styles.mark, { top: markTop, left: W / 2 - markSize / 2 }]}>
           <HeroMark size={markSize} />
         </View>
         <Animated.View
           entering={FadeIn.duration(600).delay(200)}
-          style={[styles.title, { top: markTop + markSize * 0.92 }]}
+          style={[styles.title, { top: markTop + markSize * 0.98 }]}
         >
           <Wordmark width={Math.min(W - 40, 340)} />
           <Ribbon label="SORT THE SPECTRUM" width={Math.min(W - 80, 260)} />
@@ -114,7 +114,7 @@ export const MainMenuScreen = () => {
             />
           </View>
         </Animated.View>
-      </Screen>
+      </Screen> */}
     </View>
   );
 };
