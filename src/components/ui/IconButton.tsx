@@ -9,16 +9,19 @@ type Props = {
   icon: WesternIconName;
   onPress: () => void;
   label: string;
+  /** Glyph size. */
   size?: number;
+  /** Square button size; defaults to a comfortable touch target. */
+  box?: number;
 };
 
-export const IconButton = ({ icon, onPress, label, size = 24 }: Props) => (
+export const IconButton = ({ icon, onPress, label, size = 24, box = MIN_TOUCH - 2 }: Props) => (
   <ScalePressable
     onPress={onPress}
     accessibilityRole="button"
     accessibilityLabel={label}
     hitSlop={6}
-    style={styles.button}
+    style={{ width: box, height: box + 2 }}
   >
     <WoodTile style={styles.tile}>
       <WesternIcon name={icon} size={size} color={colors.textPrimary} />
@@ -27,6 +30,5 @@ export const IconButton = ({ icon, onPress, label, size = 24 }: Props) => (
 );
 
 const styles = StyleSheet.create({
-  button: { width: MIN_TOUCH - 2, height: MIN_TOUCH },
   tile: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 });

@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "verify": "pnpm typecheck && pnpm lint && pnpm test",
-    "assets": "node tools/generate-assets.js",
+    "assets": "node tools/generate-assets.js && node tools/slice-buttons.js && node tools/slice-tile.js && sh tools/sync-native-assets.sh",
     "sounds": "node tools/generate-sounds.js",
     "eas:whoami": "sh tools/eas.sh whoami",
     "eas:builds": "sh tools/eas.sh build:list --limit 10",
@@ -21,7 +21,8 @@
     "build:ios": "sh tools/eas.sh build --platform ios --profile production --non-interactive --wait",
     "submit:ios": "sh tools/eas.sh submit --platform ios --profile production --latest --non-interactive --wait",
     "release:ios": "pnpm verify && pnpm build:ios && pnpm submit:ios",
-    "asc:app-id": "node tools/asc-app-id.js"
+    "asc:app-id": "node tools/asc-app-id.js",
+    "export:art": "node tools/export-art.js"
   },
   "jest": {
     "preset": "jest-expo",
@@ -61,6 +62,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.20.5",
     "@types/react": "~19.2.18",
+    "esbuild": "^0.28.2",
     "eslint": "^9.39.5",
     "eslint-config-expo": "^57.0.2",
     "eslint-config-prettier": "^10.1.8",

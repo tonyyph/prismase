@@ -7,6 +7,7 @@ import { AppText } from '../components/ui/AppText';
 import { CoinPill } from '../components/ui/CoinPill';
 import { ScalePressable } from '../components/ui/Pressable';
 import { Screen } from '../components/ui/Screen';
+import { WoodLabel } from '../components/ui/WoodLabel';
 import { LEVEL_SELECT_COUNT } from '../game/constants';
 import { getLevelConfig } from '../game/levelConfig';
 import { type LevelCardState, levelCardState } from '../game/selectors';
@@ -106,11 +107,12 @@ export const LevelSelectScreen = () => {
   return (
     <Screen title="Levels" onBack={game.goBack} right={<CoinPill />}>
       <View style={styles.summary}>
-        <View style={styles.summaryBoard}>
-          <AppText variant="caption" color={colors.ink}>
-            {completed} BOUNTIES · {progress.unlockedLevel} UNLOCKED
+        <WoodLabel>
+          <AppText variant="caption" color={colors.textPrimary}>
+            {completed} {completed === 1 ? 'BOUNTY' : 'BOUNTIES'} · {progress.unlockedLevel}{' '}
+            UNLOCKED
           </AppText>
-        </View>
+        </WoodLabel>
         <View style={styles.legend}>
           {(Object.keys(DIFFICULTY_COLOR) as LevelDifficulty[]).map((d) => (
             <View key={d} style={styles.legendItem}>
@@ -150,12 +152,6 @@ const styles = StyleSheet.create({
   legend: { flexDirection: 'row', gap: spacing.md },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   legendDot: { position: 'relative', bottom: 0 },
-  summaryBoard: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-    borderRadius: 4,
-    backgroundColor: colors.parchment,
-  },
   list: { paddingHorizontal: PAD, paddingBottom: spacing.xxl },
   listView: { width: '100%', maxWidth: 520, alignSelf: 'center' },
   row: { flexDirection: 'row', gap: GAP },
