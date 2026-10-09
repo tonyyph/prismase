@@ -1,27 +1,34 @@
 import { memo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 
 import { type PaidAction, type PaymentPlan, paymentPlan } from '../../game/economy';
 import { canAddExtraPrism, canUndo } from '../../game/reducer';
 import { useRewardedReady } from '../../hooks/useAds';
 import { usePrismaseGame } from '../../hooks/usePrismaseGame';
 import { useGameStore } from '../../store/gameStore';
-import { MIN_TOUCH, colors, spacing } from '../../theme';
+import { colors, spacing } from '../../theme';
 import { WesternIcon, type WesternIconName } from '../art/WesternIcon';
 import { AdBadge } from '../ui/AdBadge';
 import { AppText } from '../ui/AppText';
 import { CoinIcon } from '../ui/CoinIcon';
 import { ScalePressable } from '../ui/Pressable';
-import { WoodTile } from '../ui/WoodTile';
 
 type ButtonProps = {
   icon: WesternIconName;
   label: string;
   onPress: () => void;
   disabled?: boolean;
+  /** Shown on the paper plaque; leave undefined for an action with no count or price. */
   badge?: React.ReactNode;
   accessibilityHint?: string;
 };
+
+/** Tony's tile with a riveted paper plaque underneath; the plaque carries a count or price. */
+const PLAQUE_TILE = require('../../../assets/brand/action-tile.png');
+/** Trimmed art is 300 × 307; these fractions locate the wood face and the paper plaque. */
+const TILE_RATIO = 300 / 307;
+/** Tony's plain framed tile (no plaque), trimmed to 300 × 283. */
+const PLAIN_TILE = require('../../../assets/brand/action-tile-plain.png');
 
 const ActionButton = ({
   icon,
@@ -30,35 +37,56 @@ const ActionButton = ({
   disabled,
   badge,
   accessibilityHint,
-}: ButtonProps) => (
-  <ScalePressable
-    onPress={onPress}
-    disabled={disabled}
-    accessibilityRole="button"
-    accessibilityLabel={label}
-    accessibilityHint={accessibilityHint}
-    accessibilityState={{ disabled }}
-    style={styles.button}
-  >
-    <WoodTile style={styles.tile}>
+}: ButtonProps) => {
+  const face = (
+    <>
       <WesternIcon name={icon} size={26} color={colors.textPrimary} />
       <AppText variant="caption" numberOfLines={1}>
         {label.toUpperCase()}
       </AppText>
-      <View style={styles.badgeSlot}>{badge}</View>
-    </WoodTile>
-  </ScalePressable>
-);
+    </>
+  );
+  return (
+    <ScalePressable
+      onPress={onPress}
+      disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityHint={accessibilityHint}
+      accessibilityState={{ disabled }}
+      style={styles.button}
+    >
+      {badge !== undefined ? (
+        <View style={styles.plaqueTile}>
+          <Image
+            source={PLAQUE_TILE}
+            style={styles.plaqueArt}
+            resizeMode="stretch"
+            fadeDuration={0}
+          />
+          <View style={styles.woodFace}>{face}</View>
+          {badge ? <View style={styles.plaque}>{badge}</View> : null}
+        </View>
+      ) : (
+        <View style={styles.plainTile}>
+          <Image
+            source={PLAIN_TILE}
+            style={styles.plaqueArt}
+            resizeMode="stretch"
+            fadeDuration={0}
+          />
+          <View style={styles.plainFace}>{face}</View>
+        </View>
+      )}
+    </ScalePressable>
+  );
+};
 
-/** A parchment price tag on a string. */
+/** Text written on the tile's paper plaque. */
 const Tag = ({ text, ink = colors.ink }: { text: string; ink?: string }) => (
-  <View style={styles.tag}>
-    <View style={styles.tagRivet} />
-    <AppText variant="caption" color={ink} style={styles.tagText}>
-      {text}
-    </AppText>
-    <View style={styles.tagRivet} />
-  </View>
+  <AppText variant="caption" color={ink} numberOfLines={1} style={styles.tagText}>
+    {text}
+  </AppText>
 );
 
 const PlanBadge = ({ plan, adReady }: { plan: PaymentPlan; adReady: boolean }) => {
@@ -67,8 +95,12 @@ const PlanBadge = ({ plan, adReady }: { plan: PaymentPlan; adReady: boolean }) =
   if (!plan.affordable && adReady) return <AdBadge />;
   return (
     <View style={styles.cost}>
-      <CoinIcon size={14} />
-      <AppText variant="caption" color={plan.affordable ? colors.textPrimary : colors.textMuted}>
+      <CoinIcon size={11} />
+      <AppText
+        variant="caption"
+        color={plan.affordable ? colors.ink : colors.inkSoft}
+        style={styles.tagText}
+      >
         {plan.cost}
       </AppText>
     </View>
@@ -140,25 +172,42 @@ const styles = StyleSheet.create({
     paddingTop: spacing.sm,
     paddingBottom: spacing.sm,
   },
-  button: { flex: 1, minHeight: MIN_TOUCH + 36 },
-  tile: { alignItems: 'center', justifyContent: 'center', gap: 2, paddingVertical: spacing.sm },
-  badgeSlot: { height: 20, justifyContent: 'center' },
-  tag: {
-    flexDirection: 'row',
+  button: { flex: 1, aspectRatio: TILE_RATIO },
+  plaqueTile: { flex: 1, overflow: 'hidden' },
+  plainTile: { width: '100%', aspectRatio: 300 / 283 },
+  plainFace: {
+    position: 'absolute',
+    top: '14%',
+    bottom: '14%',
+    left: '14%',
+    right: '14%',
     alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 7,
-    paddingVertical: 1,
-    backgroundColor: colors.parchment,
-    borderWidth: 1.5,
-    borderColor: colors.brass,
-    borderRadius: 4,
-    shadowColor: '#000',
-    shadowOpacity: 0.4,
-    shadowRadius: 2,
-    shadowOffset: { width: 0, height: 1 },
+    justifyContent: 'center',
+    gap: 2,
   },
-  tagText: { letterSpacing: 0.6 },
-  tagRivet: { width: 4, height: 4, borderRadius: 2, backgroundColor: colors.brass },
+  plaqueArt: { position: 'absolute', left: 0, top: 0, width: '100%', height: '100%' },
+  // Wood face spans 11-78% of the art's height, the plaque's writable strip 85-98% (between
+  // its rivets, 23-77% of the width).
+  woodFace: {
+    position: 'absolute',
+    top: '12%',
+    bottom: '24%',
+    left: '12%',
+    right: '12%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 2,
+  },
+  plaque: {
+    position: 'absolute',
+    top: '83%',
+    bottom: '1%',
+    left: '22%',
+    right: '22%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  // The plaque strip is only ~11 pt tall on small phones; size text to it explicitly.
+  tagText: { fontSize: 10, lineHeight: 12, letterSpacing: 0.4 },
   cost: { flexDirection: 'row', alignItems: 'center', gap: 4 },
 });

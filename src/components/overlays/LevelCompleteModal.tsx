@@ -61,7 +61,7 @@ export const LevelCompleteModal = () => {
       </View>
 
       <View style={styles.portrait}>
-        <PrismItem colorId={lastColor ?? 'crimson'} size={76} />
+        <PrismItem colorId={lastColor ?? 'lasso'} size={76} />
         <LevelStamp level={win.level} />
       </View>
 

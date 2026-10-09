@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "verify": "pnpm typecheck && pnpm lint && pnpm test",
-    "assets": "node tools/generate-assets.js && node tools/slice-buttons.js && node tools/slice-tile.js && sh tools/sync-native-assets.sh",
+    "assets": "node tools/generate-assets.js && node tools/slice-buttons.js && node tools/slice-tile.js && node tools/slice-crate.js && node tools/slice-pieces.js && sh tools/sync-native-assets.sh",
     "sounds": "node tools/generate-sounds.js",
     "eas:whoami": "sh tools/eas.sh whoami",
     "eas:builds": "sh tools/eas.sh build:list --limit 10",

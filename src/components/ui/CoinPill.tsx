@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native';
-
 import { useReducedMotion } from '../../hooks/usePersistedSettings';
 import { useRollingNumber } from '../../hooks/useRollingNumber';
 import { useGameStore } from '../../store/gameStore';
@@ -16,7 +15,7 @@ export const CoinPill = () => {
 
   return (
     <WoodChip style={styles.pill}>
-      <CoinIcon size={24} />
+      <CoinIcon size={20} />
       <AppText
         variant="number"
         style={styles.count}
@@ -31,9 +30,9 @@ export const CoinPill = () => {
 
 const styles = StyleSheet.create({
   pill: {
-    gap: spacing.sm,
-    minWidth: 108,
-    height: 44,
+    gap: spacing.xxs,
+    minWidth: 60,
+    height: 40,
   },
   count: { fontVariant: ['tabular-nums'] },
 });

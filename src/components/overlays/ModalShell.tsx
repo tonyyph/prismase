@@ -14,7 +14,8 @@ type Props = {
   behind?: ReactNode;
   /** Drawn above the panel, e.g. the rope-hung sign on Pause. */
   header?: ReactNode;
-  material?: 'wood' | 'parchment';
+  /** `none` draws the children as-is, for panels that are their own artwork. */
+  material?: 'wood' | 'parchment' | 'none';
 };
 
 /** Scrim plus a centred glass panel that fades and scales in. */
@@ -53,7 +54,7 @@ export const ModalShell = ({
           style={styles.panelWrap}
         >
           {header}
-          <GlassPanel material={material}>{children}</GlassPanel>
+          {material === 'none' ? children : <GlassPanel material={material}>{children}</GlassPanel>}
         </Animated.View>
       </View>
     </Animated.View>

@@ -5,10 +5,10 @@ import Svg, { Polygon } from 'react-native-svg';
 import { colors, motion, spacing } from '../../theme';
 import { starPoints } from '../art/geometry';
 import { AppText } from '../ui/AppText';
+import { PlankImage } from '../ui/PlankImage';
 
-/** One short line of guidance on a scrap of parchment, during levels 1-3. */
+/** One short line of guidance on a riveted parchment banner, during levels 1-3. */
 export const TutorialCoach = ({ message }: { message: string }) => (
-  // The entrance animates the wrapper; the paper's slight tilt lives on the inner view.
   <Animated.View
     key={message}
     entering={FadeInDown.duration(360).easing(motion.settle)}
@@ -16,37 +16,38 @@ export const TutorialCoach = ({ message }: { message: string }) => (
     style={styles.wrap}
     accessibilityLiveRegion="polite"
   >
-    <View style={styles.note}>
+    <PlankImage tone="paper" style={styles.note}>
       <Svg width={18} height={18} viewBox="0 0 20 20">
         <Polygon points={starPoints(10, 10.5, 9, 3.8)} fill={colors.stamp} />
       </Svg>
       <View style={styles.text}>
-        <AppText variant="heading" color={colors.ink}>
+        <AppText
+          variant="heading"
+          color={colors.ink}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.8}
+        >
           {message}
         </AppText>
       </View>
-    </View>
+    </PlankImage>
   </Animated.View>
 );
 
 const styles = StyleSheet.create({
-  wrap: { alignSelf: 'center' },
+  wrap: { alignSelf: 'center', maxWidth: '94%', marginBottom: spacing.xs },
   note: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.sm,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.lg,
-    marginBottom: spacing.xs,
-    backgroundColor: colors.parchment,
-    borderWidth: 1,
-    borderColor: '#8a6a3a',
-    borderRadius: 2,
-    transform: [{ rotate: '-1deg' }],
+    height: 50,
+    // Clear the rivets at either end of the banner.
+    paddingHorizontal: 36,
     shadowColor: '#000',
-    shadowOpacity: 0.4,
-    shadowRadius: 0,
-    shadowOffset: { width: 2, height: 3 },
+    shadowOpacity: 0.45,
+    shadowRadius: 5,
+    shadowOffset: { width: 0, height: 4 },
   },
   text: { flexShrink: 1 },
 });

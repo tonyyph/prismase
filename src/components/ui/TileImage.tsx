@@ -22,11 +22,13 @@ type Props = { style?: StyleProp<ViewStyle>; children?: ReactNode };
  */
 export const TileImage = ({ style, children }: Props) => {
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
-  const corner = size ? Math.min(Math.min(size.w, size.h) * 0.3, 22) : 0;
+  // Whole points, and the stretchy pieces overlap their neighbours by a point, so no hairline
+  // gaps (which read as cracks) show between slices.
+  const corner = size ? Math.round(Math.min(Math.min(size.w, size.h) * 0.3, 22)) : 0;
   const img = (src: number, w: number | undefined, h: number | undefined, flex = false) => (
     <Image
       source={src}
-      style={[{ width: w, height: h }, flex && styles.flex]}
+      style={[{ width: w, height: h }, flex && styles.flex, flex && styles.overlapX]}
       resizeMode="stretch"
       fadeDuration={0}
     />
@@ -50,7 +52,7 @@ export const TileImage = ({ style, children }: Props) => {
             {img(S.t, undefined, corner, true)}
             {img(S.tr, corner, corner)}
           </View>
-          <View style={[styles.row, styles.flex]}>
+          <View style={[styles.row, styles.flex, styles.overlapY]}>
             {img(S.l, corner, undefined)}
             {img(S.c, undefined, undefined, true)}
             {img(S.r, corner, undefined)}
@@ -70,4 +72,6 @@ export const TileImage = ({ style, children }: Props) => {
 const styles = StyleSheet.create({
   row: { flexDirection: 'row' },
   flex: { flex: 1, alignSelf: 'stretch' },
+  overlapX: { marginHorizontal: -1 },
+  overlapY: { marginVertical: -1 },
 });

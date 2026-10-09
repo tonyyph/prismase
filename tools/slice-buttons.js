@@ -21,6 +21,8 @@ const SOURCES = {
   chip: { size: [2000, 709], box: [226, 59, 1771, 614], cap: 0.5 },
   // Dark plank with one rivet each side: info labels (level · mode, level summary).
   label: { size: [2000, 709], box: [86, 66, 1911, 632], cap: 0.48 },
+  // Riveted parchment strip: tutorial notes and other short messages.
+  paper: { size: [2000, 668], box: [39, 176, 1961, 479], cap: 0.5 },
 };
 
 const slice = (name, { size, box, cap }) => {

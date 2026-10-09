@@ -28,6 +28,12 @@ const SLICES = {
     r: require('../../../assets/buttons/label-r.png'),
     cap: meta.label.cap,
   },
+  paper: {
+    l: require('../../../assets/buttons/paper-l.png'),
+    m: require('../../../assets/buttons/paper-m.png'),
+    r: require('../../../assets/buttons/paper-r.png'),
+    cap: meta.paper.cap,
+  },
 };
 
 export type PlankTone = keyof typeof SLICES;
@@ -42,7 +48,8 @@ type Props = { tone: PlankTone; style?: StyleProp<ViewStyle>; children?: ReactNo
 export const PlankImage = ({ tone, style, children }: Props) => {
   const [height, setHeight] = useState(0);
   const s = SLICES[tone];
-  const cap = height * s.cap;
+  // Whole points, and the middle overlaps both caps by a point, so no hairline gap shows.
+  const cap = Math.round(height * s.cap);
   return (
     <View
       style={style}
@@ -80,5 +87,5 @@ export const PlankImage = ({ tone, style, children }: Props) => {
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row' },
-  mid: { flex: 1 },
+  mid: { flex: 1, marginHorizontal: -1 },
 });

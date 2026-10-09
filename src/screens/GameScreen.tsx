@@ -1,18 +1,15 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-
-import { LevelPlaque } from '../components/game/LevelPlaque';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { GameHud } from '../components/game/GameHud';
 import { GameActionBar } from '../components/game/GameActionBar';
 import type { Highlight } from '../components/game/HintOverlay';
 import { PrismBoard } from '../components/game/PrismBoard';
 import { TutorialCoach } from '../components/game/TutorialCoach';
 import { LevelCompleteModal } from '../components/overlays/LevelCompleteModal';
-import { PauseModal } from '../components/overlays/PauseModal';
+import { PauseArtPreload, PauseModal } from '../components/overlays/PauseModal';
 import { PurchaseSheet } from '../components/overlays/PurchaseSheet';
-import { CoinPill } from '../components/ui/CoinPill';
-import { IconButton } from '../components/ui/IconButton';
 import { HINT_HIGHLIGHT_MS } from '../game/constants';
 import { findBestMove } from '../game/hint';
 import { getLevelConfig } from '../game/levelConfig';
@@ -69,7 +66,6 @@ const highlightsFor = (level: LevelState | null, tutorial: Tutorial | null): Hig
 };
 
 export const GameScreen = () => {
-  const insets = useSafeAreaInsets();
   const game = usePrismaseGame();
   const level = useGameStore((s) => s.level);
   const status = useGameStore((s) => s.status);
@@ -100,19 +96,12 @@ export const GameScreen = () => {
   return (
     <View style={styles.root}>
       <StatusBar hidden />
-      {/* The status bar is hidden in play, so pad the HUD off the edge (and clear of a notch). */}
-      <SafeAreaView
-        style={[styles.safe, { paddingTop: Math.max(insets.top, 12) }]}
-        edges={['bottom', 'left', 'right']}
-      >
-        <View style={styles.topBar}>
-          <IconButton icon="pause" label="Pause" onPress={game.openPause} />
-          <LevelPlaque
-            level={level.level}
-            detail={`${config.difficulty.toUpperCase()} · ${level.moveHistory.length} MOVES`}
-          />
-          <CoinPill />
-        </View>
+      <SafeAreaView style={styles.safe} edges={['bottom', 'left', 'right']}>
+        <GameHud
+          level={level.level}
+          detail={`${config.difficulty.toUpperCase()} · ${level.moveHistory.length} MOVES`}
+          onPause={game.openPause}
+        />
 
         <View style={styles.boardWrap}>
           <PrismBoard
@@ -131,7 +120,7 @@ export const GameScreen = () => {
         <GameActionBar />
       </SafeAreaView>
 
-      {status === 'paused' ? <PauseModal /> : null}
+      {status === 'paused' ? <PauseModal /> : <PauseArtPreload />}
       {status === 'levelComplete' ? <LevelCompleteModal /> : null}
       {purchase && status === 'playing' ? <PurchaseSheet action={purchase} /> : null}
     </View>
@@ -141,14 +130,6 @@ export const GameScreen = () => {
 const styles = StyleSheet.create({
   root: { flex: 1 },
   safe: { flex: 1 },
-  topBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.xs,
-    gap: spacing.sm,
-  },
   boardWrap: {
     flex: 1,
     paddingHorizontal: spacing.lg,

@@ -21,6 +21,8 @@ type Props = {
   accessory?: ReactNode;
   disabled?: boolean;
   compact?: boolean;
+  /** Fixed board height, for stacks that must fit a given space. */
+  height?: number;
   accessibilityHint?: string;
 };
 
@@ -69,6 +71,7 @@ export const AppButton = ({
   accessory,
   disabled,
   compact,
+  height,
   accessibilityHint,
 }: Props) => {
   const primary = variant === 'primary';
@@ -81,7 +84,7 @@ export const AppButton = ({
       <HeroLabel label={label} />
     </View>
   ) : (
-    <View style={[styles.row, compact && styles.compact]}>
+    <View style={[styles.row, compact && styles.compact, height ? styles.fixedRow : null]}>
       {/* Compact boards are too short to fit an icon between the rivets. */}
       {icon && !compact ? <WesternIcon name={icon} size={24} color={ink} /> : null}
       <AppText
@@ -106,14 +109,23 @@ export const AppButton = ({
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled }}
-      style={[styles.base, !ghost && styles.shadow, hero && styles.hero]}
+      style={[
+        styles.base,
+        !ghost && styles.shadow,
+        hero && styles.hero,
+        height ? { minHeight: height } : null,
+      ]}
     >
       {ghost ? (
         content
       ) : (
         <PlankImage
           tone={primary ? 'red' : 'pine'}
-          style={[styles.surface, hero && styles.heroSurface]}
+          style={[
+            styles.surface,
+            hero && styles.heroSurface,
+            height ? { minHeight: height, height } : null,
+          ]}
         >
           {content}
         </PlankImage>
@@ -143,6 +155,8 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   heroRow: { paddingHorizontal: spacing.xl + 8, justifyContent: 'center' },
+  // With a fixed height the board centres the label itself; padding would squeeze the text.
+  fixedRow: { paddingVertical: 0 },
   compact: { paddingVertical: spacing.sm, paddingHorizontal: spacing.xl + 4 },
   label: { flexShrink: 1 },
   primaryLabel: {

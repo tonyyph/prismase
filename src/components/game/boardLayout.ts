@@ -5,8 +5,9 @@
 export const TUBE = {
   padX: 0.16,
   gap: 0.05,
-  padTop: 0.32,
-  padBottom: 0.22,
+  // Clear the painted crate's top rail and iron band, and its bottom band and rail.
+  padTop: 0.46,
+  padBottom: 0.54,
   /** Room above each tube for the lifted (selected) item. */
   lift: 1.05,
   hGap: 0.3,

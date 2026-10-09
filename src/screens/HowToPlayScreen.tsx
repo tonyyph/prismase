@@ -34,10 +34,10 @@ const CARDS: { title: string; body: string; art: () => ReactNode }[] = [
     art: () => (
       <View style={styles.art}>
         <View style={styles.lifted}>
-          <PrismItem colorId="mustard" size={24} />
-          <MiniTube items={['crimson', 'turquoise']} glow={colors.gold} />
+          <PrismItem colorId="blocks" size={24} />
+          <MiniTube items={['lasso', 'saloon-doors']} glow={colors.gold} />
         </View>
-        <MiniTube items={['turquoise', 'mustard']} />
+        <MiniTube items={['saloon-doors', 'blocks']} />
       </View>
     ),
   },
@@ -46,9 +46,9 @@ const CARDS: { title: string; body: string; art: () => ReactNode }[] = [
     body: 'It must land on the same color, or in an empty crate.',
     art: () => (
       <View style={styles.art}>
-        <MiniTube items={['crimson', 'mustard']} />
+        <MiniTube items={['lasso', 'blocks']} />
         <WesternIcon name="arrow" size={20} color={colors.textPrimary} />
-        <MiniTube items={['turquoise', 'mustard', 'mustard']} />
+        <MiniTube items={['saloon-doors', 'blocks', 'blocks']} />
         <MiniTube items={[]} />
       </View>
     ),
@@ -58,8 +58,8 @@ const CARDS: { title: string; body: string; art: () => ReactNode }[] = [
     body: 'Fill each crate with four of a kind to collect the bounty.',
     art: () => (
       <View style={styles.art}>
-        <MiniTube items={['crimson', 'crimson', 'crimson', 'crimson']} glow={colors.gold} />
-        <MiniTube items={['denim', 'denim', 'denim', 'denim']} glow={colors.gold} />
+        <MiniTube items={['lasso', 'lasso', 'lasso', 'lasso']} glow={colors.gold} />
+        <MiniTube items={['laurel', 'laurel', 'laurel', 'laurel']} glow={colors.gold} />
       </View>
     ),
   },
@@ -152,7 +152,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: 10,
+    // Clear the painted crate's bottom band and rail (0.44 × its 36 pt width).
+    bottom: 17,
     alignItems: 'center',
     flexDirection: 'column-reverse',
     gap: 1,

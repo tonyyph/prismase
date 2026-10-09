@@ -12,53 +12,32 @@ export const MAX_EXTRA_PRISMS_PER_LEVEL = 1;
 
 export const HINT_HIGHLIGHT_MS = 1800;
 
-export type Emblem =
-  | 'star'
-  | 'horseshoe'
-  | 'hat'
-  | 'cactus'
-  | 'anchor'
-  | 'boot'
-  | 'jolly'
-  | 'longhorn'
-  | 'spade'
-  | 'compass'
-  | 'wheel'
-  | 'cylinder';
-
 export type PrismColor = {
+  /** Also the name of the piece art: assets/pieces/<id>.png. */
   id: string;
   name: string;
-  /** Enamel colour of the concho face. */
+  /** The piece's enamel colour, used for the completed-crate glow and medallion. */
   base: string;
-  /** Every colour also carries its own carved emblem, so colour is never the only cue. */
-  icon: Emblem;
-  /** Light enamels take a dark emblem instead of a cream one. */
-  inkEmblem?: boolean;
-  pirate?: boolean;
 };
 
-/** Twelve conchos, ordered so early levels (few colours) get the most distinct hues. */
+/**
+ * Twelve painted pieces (Tony's art), chosen from the sheets so every hue is clearly
+ * different, and ordered so early levels (few colours) get the most distinct ones.
+ * The other pieces on the sheets share a hue with one of these and are not used.
+ */
 export const PRISM_COLORS: readonly PrismColor[] = [
-  { id: 'crimson', name: 'Crimson star', base: '#b8322a', icon: 'star' },
-  { id: 'turquoise', name: 'Turquoise horseshoe', base: '#24897d', icon: 'horseshoe' },
-  { id: 'mustard', name: 'Mustard hat', base: '#d39a14', icon: 'hat', inkEmblem: true },
-  { id: 'sage', name: 'Sage cactus', base: '#5b8a34', icon: 'cactus' },
-  { id: 'denim', name: 'Denim anchor', base: '#2f5d9e', icon: 'anchor', pirate: true },
-  { id: 'rust', name: 'Rust boot', base: '#cf6420', icon: 'boot' },
-  { id: 'plum', name: 'Plum skull and bones', base: '#6e3b6e', icon: 'jolly', pirate: true },
-  { id: 'saddle', name: 'Saddle longhorn', base: '#7a4a2a', icon: 'longhorn' },
-  { id: 'coal', name: 'Coal spade', base: '#2e2b2c', icon: 'spade' },
-  {
-    id: 'bone',
-    name: 'Bone compass',
-    base: '#e3d3ae',
-    icon: 'compass',
-    inkEmblem: true,
-    pirate: true,
-  },
-  { id: 'rose', name: 'Rose wagon wheel', base: '#c4506a', icon: 'wheel' },
-  { id: 'steel', name: 'Steel cylinder', base: '#66788a', icon: 'cylinder' },
+  { id: 'lasso', name: 'Red lasso', base: '#b81c1c' },
+  { id: 'saloon-doors', name: 'Blue saloon doors', base: '#1f48c0' },
+  { id: 'blocks', name: 'Yellow gold blocks', base: '#e6b90e' },
+  { id: 'laurel', name: 'Lime laurel', base: '#5aae1e' },
+  { id: 'spur', name: 'Orange spur', base: '#e0700e' },
+  { id: 'chest', name: 'Plum treasure chest', base: '#8a1a6a' },
+  { id: 'sunset', name: 'Teal desert sunset', base: '#1a7f8a' },
+  { id: 'crates', name: 'Pink crates', base: '#e0508e' },
+  { id: 'revolvers', name: 'Green revolvers', base: '#15723c' },
+  { id: 'pyramid', name: 'Violet pyramid', base: '#7a22c0' },
+  { id: 'rings', name: 'Cyan rings', base: '#20b0d0' },
+  { id: 'target', name: 'Slate target', base: '#4a6488' },
 ];
 
 export const MAX_COLORS = PRISM_COLORS.length;
