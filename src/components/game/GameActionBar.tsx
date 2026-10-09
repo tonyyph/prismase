@@ -53,10 +53,11 @@ const ActionButton = ({
 /** A parchment price tag on a string. */
 const Tag = ({ text, ink = colors.ink }: { text: string; ink?: string }) => (
   <View style={styles.tag}>
+    <View style={styles.tagRivet} />
     <AppText variant="caption" color={ink} style={styles.tagText}>
       {text}
     </AppText>
-    <View style={styles.tagHole} />
+    <View style={styles.tagRivet} />
   </View>
 );
 
@@ -145,16 +146,19 @@ const styles = StyleSheet.create({
   tag: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
-    paddingLeft: 6,
-    paddingRight: 4,
+    gap: 4,
+    paddingHorizontal: 7,
+    paddingVertical: 1,
     backgroundColor: colors.parchment,
-    borderWidth: 1,
-    borderColor: '#8a6a3a',
-    borderRadius: 2,
-    transform: [{ rotate: '-3deg' }],
+    borderWidth: 1.5,
+    borderColor: colors.brass,
+    borderRadius: 4,
+    shadowColor: '#000',
+    shadowOpacity: 0.4,
+    shadowRadius: 2,
+    shadowOffset: { width: 0, height: 1 },
   },
   tagText: { letterSpacing: 0.6 },
-  tagHole: { width: 3, height: 3, borderRadius: 2, backgroundColor: '#6b4a24' },
+  tagRivet: { width: 4, height: 4, borderRadius: 2, backgroundColor: colors.brass },
   cost: { flexDirection: 'row', alignItems: 'center', gap: 4 },
 });

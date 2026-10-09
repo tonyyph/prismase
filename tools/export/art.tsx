@@ -9,7 +9,6 @@ import { Doubloon } from '../../src/components/art/Doubloon';
 import { Emblem } from '../../src/components/art/Emblem';
 import { WesternIcon, type WesternIconName } from '../../src/components/art/WesternIcon';
 import { PrismItem } from '../../src/components/game/PrismItem';
-import { Planks } from '../../src/components/ui/Planks';
 import { Ribbon, Wordmark } from '../../src/components/ui/Wordmark';
 import { PRISM_COLORS } from '../../src/game/constants';
 import { colors } from '../../src/theme';
@@ -46,16 +45,6 @@ export const buildArt = (): Record<string, ArtJob> => {
   const add = (name: string, node: Parameters<typeof toSvg>[0], width: number, height: number) => {
     jobs[name] = { svg: toSvg(node), width, height };
   };
-
-  // Backdrops, at common phone sizes (points).
-  for (const [label, w, h] of [
-    ['iphone-6.9', 440, 956],
-    ['iphone-6.1', 393, 852],
-    ['iphone-se', 375, 667],
-  ] as const) {
-    add(`backdrops/planks-${label}`, <Planks width={w} height={h} />, w, h);
-  }
-  add('backdrops/planks-tile-512', <Planks width={512} height={512} vignette={false} />, 512, 512);
 
   // Crates: the board's typical slot is ~59 pt, which makes a 78 × 278 pt crate.
   const cw = 78;

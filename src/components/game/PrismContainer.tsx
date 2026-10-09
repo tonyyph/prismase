@@ -225,7 +225,15 @@ export const PrismContainer = memo(function PrismContainer({
 
 const styles = StyleSheet.create({
   container: { position: 'absolute' },
-  crate: { position: 'absolute', left: -2 },
+  crate: {
+    position: 'absolute',
+    left: -2,
+    // Crates sit on the wall: a firm drop shadow lifts them off the bright planks.
+    shadowColor: '#000',
+    shadowOpacity: 0.6,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 7 },
+  },
   selection: {
     position: 'absolute',
     left: -4,
