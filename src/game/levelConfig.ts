@@ -39,5 +39,3 @@ export const getLevelConfig = (rawLevel: number): LevelConfig => {
     seed: `prismase-${level}`,
   };
 };
-
-export const isTutorialLevel = (level: number) => level <= 3;

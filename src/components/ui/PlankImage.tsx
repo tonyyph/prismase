@@ -36,7 +36,7 @@ const SLICES = {
   },
 };
 
-export type PlankTone = keyof typeof SLICES;
+type PlankTone = keyof typeof SLICES;
 
 type Props = { tone: PlankTone; style?: StyleProp<ViewStyle>; children?: ReactNode };
 

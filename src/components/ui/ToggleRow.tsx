@@ -1,9 +1,10 @@
-import { StyleSheet, Switch, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { StyleSheet, View } from 'react-native';
 
-import { haptic } from '../../hooks/useHaptics';
 import { MIN_TOUCH, colors, spacing } from '../../theme';
 import { WesternIcon, type WesternIconName } from '../art/WesternIcon';
 import { AppText } from './AppText';
+import { WesternSwitch } from './WesternSwitch';
 
 type Props = {
   icon: WesternIconName;
@@ -13,32 +14,25 @@ type Props = {
   onChange: (value: boolean) => void;
 };
 
+/** One setting on the parchment: brass medallion icon, ink label, wood-and-brass toggle. */
 export const ToggleRow = ({ icon, label, description, value, onChange }: Props) => (
-  <View style={styles.row} accessibilityRole="switch" accessibilityState={{ checked: value }}>
-    <View style={styles.icon}>
-      <WesternIcon name={icon} size={22} color={colors.ink} />
-    </View>
+  <View style={styles.row}>
+    <LinearGradient colors={['#f7dd8c', '#b07a24', '#6b4214']} style={styles.medallion}>
+      <View style={styles.medallionFace}>
+        <WesternIcon name={icon} size={24} color={colors.ink} />
+      </View>
+    </LinearGradient>
     <View style={styles.text}>
-      <AppText variant="heading" color={colors.textPrimary}>
+      <AppText variant="heading" color={colors.ink} style={styles.label}>
         {label}
       </AppText>
       {description ? (
-        <AppText variant="body" color={colors.textSecondary} style={styles.desc}>
+        <AppText variant="body" color={colors.inkSoft} style={styles.desc}>
           {description}
         </AppText>
       ) : null}
     </View>
-    <Switch
-      value={value}
-      accessibilityLabel={label}
-      onValueChange={(next) => {
-        haptic('tap');
-        onChange(next);
-      }}
-      trackColor={{ false: '#4a2a17', true: colors.brick }}
-      thumbColor={colors.parchment}
-      ios_backgroundColor="#4a2a17"
-    />
+    <WesternSwitch value={value} onChange={onChange} label={label} />
   </View>
 );
 
@@ -47,19 +41,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md,
-    minHeight: MIN_TOUCH + 8,
-    paddingVertical: spacing.sm,
+    minHeight: MIN_TOUCH + 16,
+    paddingVertical: spacing.md,
   },
-  icon: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: colors.parchment,
+  medallion: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    padding: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  medallionFace: {
+    flex: 1,
+    borderRadius: 21,
+    backgroundColor: '#f1dfb4',
     borderWidth: 1.5,
     borderColor: colors.brassDark,
     alignItems: 'center',
     justifyContent: 'center',
   },
   text: { flex: 1, gap: 1 },
+  label: { fontSize: 19, lineHeight: 25 },
   desc: { fontSize: 14, lineHeight: 19 },
 });

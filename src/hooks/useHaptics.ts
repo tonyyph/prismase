@@ -1,5 +1,4 @@
 import * as Haptics from 'expo-haptics';
-import { useMemo } from 'react';
 
 import { getSettings } from '../store/gameStore';
 
@@ -23,5 +22,3 @@ export const haptic = (kind: HapticKind) => {
   };
   run().catch(() => undefined);
 };
-
-export const useHaptics = () => useMemo(() => ({ haptic }), []);

@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 /**
- * Exports every SVG-drawn asset to PNG under art-export/ (backdrops, crates, conchos, emblems,
- * doubloon, icons, wordmark, plus the plank buttons, panels and posters). Run with
- * `pnpm export:art`.
+ * Exports the SVG-drawn assets still in the app to PNG under art-export/ (crate medallions,
+ * doubloon, icons, coin pouch, free tag, ad stamp). Run with `pnpm export:art`.
  *
  * App art comes from the real components: esbuild bundles tools/export/art.tsx with
  * react-native-svg swapped for a tiny shim that emits plain SVG tags, then resvg renders each
- * string at @3x with the game's fonts. Plank buttons and panels are React Native views in the
- * app, so those come from the approved mockup's SVG drawings (docs/design/asset-review.html).
+ * string at @3x with the game's fonts. The coin pouch, tag and stamp are React Native views in
+ * the app, so those come from the approved mockup's SVG drawings (docs/design/asset-review.html).
  */
 const fs = require('fs');
 const path = require('path');
@@ -66,9 +65,7 @@ const loadMockupKit = () => {
   const html = fs.readFileSync(path.join(ROOT, 'docs/design/asset-review.html'), 'utf8');
   const js = html.slice(html.indexOf('<script>') + 8, html.indexOf('</script>'));
   const body = js.slice(0, js.indexOf('// ---------- render ----------'));
-  const factory = new Function(
-    `${body}\nreturn { plankButton, woodTile, coinPill, wanted, hangingSign, actionTile, freeTag, adStamp, planks, torn, C };`,
-  );
+  const factory = new Function(`${body}\nreturn { coinPill, freeTag, adStamp };`);
   return factory();
 };
 
@@ -88,36 +85,12 @@ const main = () => {
 
   const kit = loadMockupKit();
   const ui = {
-    'ui/buttons/primary-ride-out': [300, 64, kit.plankButton(2, 2, 296, 56, 'Ride Out')],
-    'ui/buttons/primary-blank': [300, 64, kit.plankButton(2, 2, 296, 56, '')],
-    'ui/buttons/secondary-level-select': [
-      300,
-      60,
-      kit.plankButton(2, 2, 296, 52, 'LEVEL SELECT', { variant: 'secondary' }),
-    ],
-    'ui/buttons/secondary-blank': [
-      300,
-      60,
-      kit.plankButton(2, 2, 296, 52, '', { variant: 'secondary' }),
-    ],
-    'ui/buttons/secondary-with-ad': [
-      300,
-      60,
-      kit.plankButton(2, 2, 296, 52, 'SKIP LEVEL', { variant: 'secondary', ad: true }),
-    ],
-    'ui/wood-tile': [96, 96, kit.woodTile(4, 4, 88, 84)],
     'ui/coin-pouch': [104, 44, kit.coinPill(2, 2, 52)],
     'ui/tag-free': [56, 20, kit.freeTag(2, 2, '3 FREE')],
     'ui/stamp-ad': [
       40,
       28,
       `<g transform="translate(5 16)">${kit.adStamp(0, 0).replace(/<g transform="translate\(0 0\) rotate\(-4\)">/, '<g transform="rotate(-4)">')}</g>`,
-    ],
-    'ui/panels/hanging-sign-paused': [300, 160, kit.hangingSign(10, 76, 280)],
-    'ui/panels/wanted-poster': [
-      340,
-      520,
-      kit.wanted(10, 14, 320, 490).replace('DOUBLE THE BOUNTY', 'DOUBLE IT'),
     ],
   };
   for (const [name, [w, h, inner]] of Object.entries(ui)) {

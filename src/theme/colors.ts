@@ -39,7 +39,5 @@ export const colors = {
   scrim: 'rgba(20,9,4,0.66)',
 } as const;
 
-export const brassGradient = ['#f7dd8c', '#cc9a34', '#7a4f14'] as const;
 export const brickGradient = ['#c94a2f', '#8e2a19'] as const;
-export const plankGradient = ['#cfa268', '#a3723d'] as const;
 export const woodGradient = ['#9a6435', '#6e4223'] as const;

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import { DEFAULT_PROGRESS, DEFAULT_SETTINGS, HINT_HIGHLIGHT_MS } from '../game/constants';
+import { DEFAULT_PROGRESS, DEFAULT_SETTINGS } from '../game/constants';
 import { type PaidAction, COSTS, paymentPlan } from '../game/economy';
 import { getLevel } from '../game/levelGenerator';
 import {
@@ -43,7 +43,7 @@ import {
 } from '../services/storage/progressStorage';
 import { loadSettings, saveSettings } from '../services/storage/settingsStorage';
 
-export type WinSummary = {
+type WinSummary = {
   level: number;
   coinsEarned: number;
   firstClear: boolean;
@@ -52,7 +52,7 @@ export type WinSummary = {
   timeMs: number;
 };
 
-export type Toast = { message: string; seq: number };
+type Toast = { message: string; seq: number };
 
 const REWARD_PLACEMENT: Record<PaidAction, AdPlacement> = {
   hint: 'reward_hint',
@@ -368,5 +368,3 @@ export const useGameStore = create<Store>((set, get) => {
 });
 
 export const getSettings = () => useGameStore.getState().settings;
-
-export { HINT_HIGHLIGHT_MS };

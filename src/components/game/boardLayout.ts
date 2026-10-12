@@ -2,7 +2,7 @@
  * Board geometry, in units of one item slot `s`. Pure so it can be unit tested for every
  * container count on small and large phones.
  */
-export const TUBE = {
+const TUBE = {
   padX: 0.16,
   gap: 0.05,
   // Clear the painted crate's top rail and iron band, and its bottom band and rail.
@@ -14,7 +14,7 @@ export const TUBE = {
   vGap: 0.32,
 } as const;
 
-export const MAX_SLOT = 60;
+const MAX_SLOT = 60;
 
 export type Rect = { x: number; y: number; width: number; height: number };
 

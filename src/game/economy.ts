@@ -15,9 +15,6 @@ export type PaidAction = 'hint' | 'undo' | 'extraPrism';
 export const winReward = (progress: PlayerProgress, level: number) =>
   progress.completedLevels.includes(level) ? REWARDS.replay : REWARDS.newLevel;
 
-/** The rewarded "double coins" bonus pays the level's reward a second time. */
-export const doubledBonus = (coinsEarned: number) => coinsEarned;
-
 /**
  * How the player would pay for an action right now, in the order it is charged:
  * the per-level free quota, then banked boosters, then coins. Rewarded ads are always an

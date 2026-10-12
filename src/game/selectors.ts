@@ -1,4 +1,3 @@
-import { isContainerComplete } from './moveRules';
 import type { LevelState, PlayerProgress } from './types';
 
 export type LevelCardState = 'locked' | 'current' | 'completed' | 'unlocked';
@@ -10,9 +9,6 @@ export const levelCardState = (progress: PlayerProgress, level: number): LevelCa
   if (progress.completedLevels.includes(level)) return 'completed';
   return 'unlocked';
 };
-
-export const completedContainerIds = (state: LevelState) =>
-  new Set(state.containers.filter(isContainerComplete).map((c) => c.id));
 
 export const moveCount = (state: LevelState) => state.moveHistory.length;
 

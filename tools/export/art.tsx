@@ -6,7 +6,6 @@
 import { CrateMedallion } from '../../src/components/art/CrateMedallion';
 import { Doubloon } from '../../src/components/art/Doubloon';
 import { WesternIcon, type WesternIconName } from '../../src/components/art/WesternIcon';
-import { Ribbon, Wordmark } from '../../src/components/ui/Wordmark';
 import { PRISM_COLORS } from '../../src/game/constants';
 import { colors } from '../../src/theme';
 import { toSvg } from './serialize';
@@ -59,12 +58,5 @@ export const buildArt = (): Record<string, ArtJob> => {
     );
     add(`ui/icons/ink/${name}`, <WesternIcon name={name} size={48} color={colors.ink} />, 48, 48);
   }
-  add('ui/wordmark', <Wordmark width={340} />, 340, Math.round(340 * 0.27));
-  add(
-    'ui/ribbon-sort-the-spectrum',
-    <Ribbon label="SORT THE SPECTRUM" width={260} />,
-    260,
-    Math.round((260 * 40) / 290),
-  );
   return jobs;
 };

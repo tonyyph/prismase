@@ -19,7 +19,7 @@ export type SoundName = keyof typeof SOUNDS;
 const VOLUME: Partial<Record<SoundName, number>> = { select: 0.4, move: 0.55, invalid: 0.45 };
 
 /** The sound and haptic for one board event. Exported for tests. */
-export const feedbackForEvent = (
+const feedbackForEvent = (
   event: BoardEvent,
 ): { sound?: SoundName; haptic?: 'select' | 'move' | 'invalid' | 'success' } => {
   switch (event.kind) {
@@ -42,7 +42,7 @@ export const feedbackForEvent = (
 let players: Partial<Record<SoundName, AudioPlayer>> = {};
 
 /** Plays a sound if enabled. Missing or failing players stay silent. */
-export const playSound = (name: SoundName) => {
+const playSound = (name: SoundName) => {
   if (!getSettings().soundEnabled) return;
   const player = players[name];
   if (!player) return;

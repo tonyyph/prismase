@@ -7,7 +7,7 @@ import { GameActionBar } from '../components/game/GameActionBar';
 import type { Highlight } from '../components/game/HintOverlay';
 import { PrismBoard } from '../components/game/PrismBoard';
 import { TutorialCoach } from '../components/game/TutorialCoach';
-import { LevelCompleteModal } from '../components/overlays/LevelCompleteModal';
+import { LevelCompleteModal, WinBackdropPreload } from '../components/overlays/LevelCompleteModal';
 import { PauseArtPreload, PauseModal } from '../components/overlays/PauseModal';
 import { PurchaseSheet } from '../components/overlays/PurchaseSheet';
 import { HINT_HIGHLIGHT_MS } from '../game/constants';
@@ -121,7 +121,7 @@ export const GameScreen = () => {
       </SafeAreaView>
 
       {status === 'paused' ? <PauseModal /> : <PauseArtPreload />}
-      {status === 'levelComplete' ? <LevelCompleteModal /> : null}
+      {status === 'levelComplete' ? <LevelCompleteModal /> : <WinBackdropPreload />}
       {purchase && status === 'playing' ? <PurchaseSheet action={purchase} /> : null}
     </View>
   );

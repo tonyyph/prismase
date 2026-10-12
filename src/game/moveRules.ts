@@ -1,9 +1,9 @@
 import type { ContainerState, Move, PrismItem } from './types';
 
-export const topItem = (container: ContainerState): PrismItem | undefined =>
+const topItem = (container: ContainerState): PrismItem | undefined =>
   container.items[container.items.length - 1];
 
-export const isFull = (container: ContainerState) => container.items.length >= container.capacity;
+const isFull = (container: ContainerState) => container.items.length >= container.capacity;
 
 const findContainer = (containers: readonly ContainerState[], id: string) =>
   containers.find((c) => c.id === id);

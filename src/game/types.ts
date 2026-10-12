@@ -9,7 +9,7 @@ export type LevelConfig = {
   seed: string;
 };
 
-export type PrismVariant = 'orb' | 'shard' | 'gem';
+type PrismVariant = 'orb' | 'shard' | 'gem';
 
 export type PrismItem = {
   id: string;
@@ -26,7 +26,7 @@ export type ContainerState = {
 
 export type Move = { sourceId: string; targetId: string };
 
-export type MoveRecord = Move & {
+type MoveRecord = Move & {
   item: PrismItem;
   timestamp: number;
 };
@@ -51,7 +51,7 @@ export type BoardEvent =
   | { seq: number; kind: 'restart' }
   | { seq: number; kind: 'extraPrism'; containerId: string };
 
-export type HintHighlight = Move & { seq: number };
+type HintHighlight = Move & { seq: number };
 
 export type LevelState = {
   level: number;

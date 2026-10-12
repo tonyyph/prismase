@@ -7,9 +7,6 @@ export type AdPlacement =
   | 'reward_skip_level'
   | 'reward_double_coins';
 
-export type RewardedPlacement = Extract<AdPlacement, `reward_${string}`>;
-export type InterstitialPlacement = Extract<AdPlacement, `${string}_interstitial`>;
-
 export interface AdService {
   initialize(): Promise<void>;
   /** Resolves true if an ad was shown. Never rejects. */

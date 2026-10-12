@@ -24,7 +24,7 @@ const withEvent = (state: LevelState, event: EventInput): LevelState => ({
   lastEvent: { ...event, seq: (state.lastEvent?.seq ?? 0) + 1 } as BoardEvent,
 });
 
-export const freeHintsForLevel = (level: number) => (level <= FREE_HINT_MAX_LEVEL ? 1 : 0);
+const freeHintsForLevel = (level: number) => (level <= FREE_HINT_MAX_LEVEL ? 1 : 0);
 
 export const createLevelState = (
   level: number,

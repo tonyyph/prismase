@@ -3,7 +3,7 @@ import type { Settings } from '../../game/types';
 import { readJson, writeJson } from './jsonStorage';
 import { STORAGE_KEYS } from './storageKeys';
 
-export const sanitizeSettings = (raw: unknown): Settings => {
+const sanitizeSettings = (raw: unknown): Settings => {
   const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
   const bool = (key: keyof Settings) =>
     typeof r[key] === 'boolean' ? (r[key] as boolean) : DEFAULT_SETTINGS[key];
