@@ -32,10 +32,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(registerDevLinks, []);
 
-  // Leaving the app mid-level pauses it, so nobody returns to a running board.
+  // Leaving the app mid-level pauses it, so nobody returns to a running board. Not while an ad
+  // is up (busy): a full-screen ad or its App Store sheet also makes the app inactive.
   useEffect(() => {
     const sub = AppState.addEventListener('change', (state) => {
-      if (state !== 'active') useGameStore.getState().openPause();
+      const game = useGameStore.getState();
+      if (state !== 'active' && !game.busy) game.openPause();
     });
     return () => sub.remove();
   }, []);

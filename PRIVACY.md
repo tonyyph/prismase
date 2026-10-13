@@ -1,22 +1,32 @@
 # Prismase Privacy Policy
 
-_Last updated: 2026-10-07 · Applies to Prismase 1.0.0_
+_Last updated: 2026-10-12 · Applies to Prismase 1.0.0_
 
-Prismase is an offline puzzle game.
+Prismase is a puzzle game. It needs no account and keeps your game on your device. It shows
+ads from Google AdMob, which is the only part of the app that sends data off your device.
 
 - **No account is required.** There is no sign-in and no profile.
-- **No personal data is collected in v1.** Prismase does not collect, transmit or sell
-  personal information, contacts, location, photos, or identifiers.
-- **Data stays on your device.** Your level progress, coin balance and settings are saved
+- **Your game stays on your device.** Level progress, coin balance and settings are saved
   locally with the operating system's app storage. They are removed when you delete the app
-  or choose _Settings → Reset progress_.
-- **No analytics or tracking.** Version 1.0.0 contains no analytics SDK, no crash-reporting
-  SDK and no advertising SDK, and does not use the advertising identifier (IDFA / AAID).
-- **Ads.** The ad placements in v1 are placeholders that never contact an ad network.
-  Integration with an ad network (for example Google AdMob) is planned. **If real ads are
-  added, this policy and the App Store / Google Play privacy disclosures will be updated
-  before release**, including what the ad network collects, consent options (GDPR/UMP), and
-  App Tracking Transparency on iOS.
-- **Children.** Prismase does not knowingly collect any data from anyone, including children.
+  or choose _Settings → Reset progress_. We do not collect or receive them.
+- **Ads (Google AdMob).** Prismase shows full-screen ads between some levels and optional
+  ads you choose to watch for a reward. To serve and measure these ads, Google may collect:
+  - device identifiers, including the advertising identifier (IDFA on iOS) **only if you
+    allow tracking** when iOS asks;
+  - coarse location derived from your IP address;
+  - ad interaction and diagnostic data (for example, which ads were shown or tapped, and
+    crashes of the ad SDK).
+
+  Google uses this data as described in its policy:
+  https://policies.google.com/technologies/partner-sites
+- **Your choices.**
+  - _iOS tracking:_ you can allow or deny tracking when asked, and change it later in
+    _Settings → Privacy & Security → Tracking_. Ads still appear if you deny; they are just
+    less personalised.
+  - _EEA, UK and Switzerland:_ you are shown Google's consent form before any ad is
+    requested, and can choose which purposes to allow.
+- **No analytics.** Prismase contains no analytics or crash-reporting SDK of its own.
+- **Children.** Prismase is not directed at children under 13, and ads are limited to
+  content rated suitable for general audiences with parental guidance (PG).
 
 Contact: support@yourcompany.example (replace before publishing).

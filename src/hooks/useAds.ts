@@ -1,14 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 
 import { adService, mockAdService } from '../services/ads/adService';
 import type { AdPlacement } from '../services/ads/adTypes';
 import type { MockAdRequest } from '../services/ads/mockAdService';
 import { useGameStore } from '../store/gameStore';
 
-/** Whether a rewarded ad could be offered for a placement. Re-checked when busy state changes. */
+const subscribe = (listener: () => void) => adService.subscribe(listener);
+
+/**
+ * Whether a rewarded ad could be offered for a placement. Re-checked when an ad loads or
+ * closes, and when busy state changes.
+ */
 export const useRewardedReady = (placement: AdPlacement) => {
   useGameStore((s) => s.busy);
-  return adService.isRewardedReady(placement);
+  return useSyncExternalStore(subscribe, () => adService.isRewardedReady(placement));
 };
 
 /** Connects the mock ad network to the on-screen placeholder. */

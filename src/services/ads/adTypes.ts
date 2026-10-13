@@ -14,5 +14,7 @@ export interface AdService {
   /** Resolves true only if the user earned the reward. Never rejects. */
   showRewarded(placement: AdPlacement): Promise<boolean>;
   isRewardedReady(placement: AdPlacement): boolean;
-  canShowInterstitial(): boolean;
+  canShowInterstitial(placement: AdPlacement): boolean;
+  /** Called whenever an ad finishes loading or showing, so the UI can re-check readiness. */
+  subscribe(listener: () => void): () => void;
 }

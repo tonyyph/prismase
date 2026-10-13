@@ -30,15 +30,20 @@
 - [ ] VoiceOver / TalkBack read prism contents and button labels.
 - [ ] Airplane mode: the whole game works.
 
-## Ads (only if shipping real ads in this version)
+## Ads (Google AdMob)
 
-- [ ] Implement `AdMobAdService` (see TODO list in the file) and set `EXPO_PUBLIC_ADS_PROVIDER=admob`.
-- [ ] Real ad unit ids in production builds, test ids in development.
-- [ ] UMP consent flow for EEA/UK; ATT prompt on iOS if using IDFA.
-- [ ] Update `PRIVACY.md`, App Store privacy nutrition label, Play Data safety form, and
-      `privacyManifests` in `app.json` (AdMob ships its own manifest).
-- [ ] Verify pacing on device: interstitial at most every 3 wins and 90 s, never after a rewarded ad.
-- [ ] Add `app-ads.txt` to the developer website.
+- [x] `AdMobAdService` implemented; EAS builds set `EXPO_PUBLIC_ADS_PROVIDER=admob` (eas.json).
+- [x] UMP consent form (EEA/UK) then ATT prompt on iOS, before the first ad request.
+- [ ] Real ad unit id for every placement in `UNIT_IDS` (admobAdService.ts). Placements
+      without one show no ad in release builds. Dev builds always use Google test units.
+- [ ] AdMob console: publish the GDPR message and (optional) IDFA explainer message.
+- [ ] App Store Connect App Privacy: Device ID, Coarse Location, Product Interaction,
+      Advertising Data, Crash Data → "Third-party advertising", linked to tracking (ATT).
+- [ ] Publish `PRIVACY.md` on the website and set its URL in App Store Connect.
+- [ ] Add `app-ads.txt` to the developer website (same domain as the Marketing URL).
+- [ ] TestFlight: test ads appear, a rewarded ad closed early gives no reward, pacing holds
+      (interstitial at most every 3 wins and 90 s, never right after a rewarded ad).
+- [ ] After release: link the app to the App Store listing in AdMob.
 
 ## Store
 

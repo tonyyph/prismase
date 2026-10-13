@@ -43,7 +43,12 @@ export class MockAdService implements AdService {
     return this.initialized && !this.showing && this.filled();
   }
 
-  canShowInterstitial() {
+  /** The mock is always loaded, so readiness only changes with `showing`, which re-renders via busy. */
+  subscribe(_listener: () => void) {
+    return () => undefined;
+  }
+
+  canShowInterstitial(_placement?: AdPlacement) {
     return this.initialized && !this.showing;
   }
 

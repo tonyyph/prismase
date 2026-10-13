@@ -174,7 +174,7 @@ export const useGameStore = create<Store>((set, get) => {
   };
 
   const interstitial = async (placement: AdPlacement) => {
-    if (!adService.canShowInterstitial()) return;
+    if (!adService.canShowInterstitial(placement)) return;
     set({ busy: true });
     try {
       const shown = await adService.showInterstitial(placement);

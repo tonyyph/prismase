@@ -5,7 +5,10 @@
   },
   "build": {
     "base": {
-      "node": "22.14.0"
+      "node": "22.14.0",
+      "env": {
+        "EXPO_PUBLIC_ADS_PROVIDER": "admob"
+      }
     },
     "preview": {
       "extends": "base",
