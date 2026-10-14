@@ -34,13 +34,15 @@
 
 - [x] `AdMobAdService` implemented; EAS builds set `EXPO_PUBLIC_ADS_PROVIDER=admob` (eas.json).
 - [x] UMP consent form (EEA/UK) then ATT prompt on iOS, before the first ad request.
-- [ ] Real ad unit id for every placement in `UNIT_IDS` (admobAdService.ts). Placements
+- [x] Real ad unit id for every placement (iOS) in `UNIT_IDS` (admobAdService.ts). Placements
       without one show no ad in release builds. Dev builds always use Google test units.
-- [ ] AdMob console: publish the GDPR message and (optional) IDFA explainer message.
+- [x] AdMob console: GDPR message published.
 - [ ] App Store Connect App Privacy: Device ID, Coarse Location, Product Interaction,
       Advertising Data, Crash Data → "Third-party advertising", linked to tracking (ATT).
-- [ ] Publish `PRIVACY.md` on the website and set its URL in App Store Connect.
-- [ ] Add `app-ads.txt` to the developer website (same domain as the Marketing URL).
+- [x] Website on Vercel (`website/`, project `prismase`): https://prismase.vercel.app
+      (privacy: /privacy, support: /support). Set these URLs in App Store Connect.
+- [x] `app-ads.txt` live at https://prismase.vercel.app/app-ads.txt (Marketing URL must be
+      https://prismase.vercel.app so AdMob can verify it).
 - [ ] TestFlight: test ads appear, a rewarded ad closed early gives no reward, pacing holds
       (interstitial at most every 3 wins and 90 s, never right after a rewarded ad).
 - [ ] After release: link the app to the App Store listing in AdMob.

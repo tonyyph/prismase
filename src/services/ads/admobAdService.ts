@@ -22,6 +22,12 @@ import type { AdPlacement, AdService } from './adTypes';
  */
 const UNIT_IDS: Partial<Record<AdPlacement, { ios?: string; android?: string }>> = {
   level_complete_interstitial: { ios: 'ca-app-pub-8416109953639059/8989926477' },
+  restart_interstitial: { ios: 'ca-app-pub-8416109953639059/3327053178' },
+  reward_hint: { ios: 'ca-app-pub-8416109953639059/8320534568' },
+  reward_undo: { ios: 'ca-app-pub-8416109953639059/1935834477' },
+  reward_extra_prism: { ios: 'ca-app-pub-8416109953639059/5694371229' },
+  reward_skip_level: { ios: 'ca-app-pub-8416109953639059/5454698075' },
+  reward_double_coins: { ios: 'ca-app-pub-8416109953639059/2065942394' },
 };
 
 const isRewarded = (placement: AdPlacement) => placement.startsWith('reward_');

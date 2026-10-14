@@ -29,4 +29,4 @@ ads from Google AdMob, which is the only part of the app that sends data off you
 - **Children.** Prismase is not directed at children under 13, and ads are limited to
   content rated suitable for general audiences with parental guidance (PG).
 
-Contact: support@yourcompany.example (replace before publishing).
+Contact: tonyphvincent@gmail.com · Published at https://prismase.vercel.app/privacy (source: website/privacy/index.html).
