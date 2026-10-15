@@ -1,5 +1,8 @@
 # Prismase store listing (draft)
 
+> For iOS, the up-to-date copy (matching the painted pieces and ads) is in
+> `docs/APP_STORE_CONNECT.md`. This draft is kept for the Google Play listing.
+
 ## Name
 
 Prismase: Outlaw Sort Puzzle

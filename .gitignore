@@ -3,6 +3,7 @@
 #Agent
 .claude
 skills-lock.json
+.agents
 
 # dependencies
 node_modules/
